@@ -5,7 +5,6 @@ import Enums.PlayerActions;
 import Models.ActionWeight;
 import Models.GameObject;
 import Models.GameState;
-import Models.PlayerAction;
 import Services.MathService;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class ObstacleProcessor extends Processor {
 
         if (!gameState.getGameObjects().isEmpty()) {
             var obstacleList = gameState.getGameObjects()
-                    .stream().filter(item -> item.getGameObjectType() == ObjectTypes.GAS_CLOUD || item.getGameObjectType() == ObjectTypes.ASTEROID_FIELD || MathService.getDistanceBetween(bot, item) < 10)
+                    .stream().filter(item -> (item.getGameObjectType() == ObjectTypes.GAS_CLOUD || item.getGameObjectType() == ObjectTypes.ASTEROID_FIELD))
                     .sorted(Comparator
                             .comparing(item -> MathService.getDistanceBetween(bot, item)))
                     .collect(Collectors.toList());

@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 
 public class FoodProcessor extends Processor {
+    final static double VALUE = 5.0;
 
 
     public FoodProcessor(GameObject bot, GameState gameState) {
@@ -21,7 +22,7 @@ public class FoodProcessor extends Processor {
     @Override
     public void process() {
         var foodList = gameState.getGameObjects()
-                .stream().filter(item -> item.getGameObjectType() == ObjectTypes.FOOD)
+                .stream().filter(item -> item.getGameObjectType() == ObjectTypes.FOOD || item.getGameObjectType() == ObjectTypes.SUPER_FOOD)
                 .sorted(Comparator.comparing(item -> MathService.getDistanceBetween(bot, item)))
                 .collect(Collectors.toList());
         var array = new ArrayList<ActionWeight>(1);
@@ -31,7 +32,8 @@ public class FoodProcessor extends Processor {
         } else {
             this.data.put(PlayerActions.FORWARD, array);
             for (GameObject obj : foodList) {
-                double weight = 5 / MathService.getDistanceBetween(bot, obj);
+                var value = obj.getGameObjectType() == ObjectTypes.FOOD ? VALUE : VALUE * 1.5;
+                double weight = value / MathService.getDistanceBetween(bot, obj);
                 var actionWeight = new ActionWeight(MathService.getHeadingBetween(bot, obj), weight);
                 array.add(actionWeight);
             }

@@ -1,11 +1,18 @@
-import Enums.*;
-import Models.*;
-import Services.*;
-import com.microsoft.signalr.*;
+import Enums.ObjectTypes;
+import Models.GameObject;
+import Models.GameState;
+import Models.GameStateDto;
+import Models.Position;
+import Services.BotService;
+import com.microsoft.signalr.HubConnection;
+import com.microsoft.signalr.HubConnectionBuilder;
+import com.microsoft.signalr.HubConnectionState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class Main {
 
@@ -58,7 +65,7 @@ public class Main {
 
         Thread.sleep(1000);
         System.out.println("Registering with the runner...");
-        hubConnection.send("Register", token, "Coffee Bot");
+        hubConnection.send("Register", token, "AFK Bot");
 
         //This is a blocking call
         hubConnection.start().subscribe(() -> {

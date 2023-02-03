@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 
 
 public class ObstacleProcessor extends Processor {
+    final static double VALUE = 5.0;
+
     public ObstacleProcessor(GameObject bot, GameState gameState) {
         super(bot, gameState);
     }
@@ -31,7 +33,7 @@ public class ObstacleProcessor extends Processor {
             for (GameObject obj : obstacleList) {
                 int heading = MathService.reverseHeading(MathService.getHeadingBetween(bot, obj));
                 // weight akan berpengaruh pada prioritas algoritma untuk mengambil action ini
-                double weight = 5 / MathService.getDistanceBetween(bot, obj);
+                double weight = VALUE / MathService.getDistanceBetween(bot, obj);
                 var actionWeight = new ActionWeight(heading, weight);
                 ActionHeadingList.add(actionWeight);
             }

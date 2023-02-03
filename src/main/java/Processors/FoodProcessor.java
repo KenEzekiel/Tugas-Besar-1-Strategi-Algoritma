@@ -1,11 +1,13 @@
 package Processors;
 
+import Models.GameObject;
 import Models.GameState;
 
 public class FoodProcessor extends Processor {
 
-    public FoodProcessor(GameState gameState) {
-        super(gameState);
+
+    public FoodProcessor(GameObject bot, GameState gameState) {
+        super(bot, gameState);
     }
 
     @Override

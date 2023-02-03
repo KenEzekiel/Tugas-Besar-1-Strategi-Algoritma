@@ -1,6 +1,7 @@
 package Services;
 
 import Models.GameObject;
+import com.azure.core.annotation.Head;
 
 public final class MathService {
     public static double getDistanceBetween(GameObject object1, GameObject object2) {
@@ -18,4 +19,6 @@ public final class MathService {
     public static int toDegrees(double v) {
         return (int) (v * (180 / Math.PI));
     }
+
+    public static int reverseHeading(int Heading) { return (int) ((Heading + 180) % 360); }
 }

@@ -33,7 +33,7 @@ public class ObstacleProcessor extends Processor {
             for (GameObject obj : obstacleList) {
                 int heading = MathService.reverseHeading(MathService.getHeadingBetween(bot, obj));
                 // weight akan berpengaruh pada prioritas algoritma untuk mengambil action ini
-                double weight = VALUE / MathService.getDistanceBetween(bot, obj);
+                double weight = MathService.getDistanceBetween(bot, obj) != 0? VALUE / MathService.getDistanceBetween(bot, obj) : VALUE / 0.00001;
                 var actionWeight = new ActionWeight(heading, weight);
                 ActionHeadingList.add(actionWeight);
             }

@@ -23,7 +23,6 @@ public class MainProcessor extends Processor {
 
         ObstacleProcessor obstacleProcessor = new ObstacleProcessor(bot, gameState);
         processOneProcessor(obstacleProcessor);
-
         EdgeProcessor edgeProcessor = new EdgeProcessor(bot, gameState);
         processOneProcessor(edgeProcessor);
     }

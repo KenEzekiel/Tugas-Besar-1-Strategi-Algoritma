@@ -9,13 +9,13 @@ import Services.MathService;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class TorpedoProcessor extends Processor {
+public class TorpedoProcessorPlayer extends Processor {
 
     // MINVAL is 16 to prevent self destruct
     final static double MINVAL = 16.0;
     final static double VALUE = 1.0;
 
-    public TorpedoProcessor(GameObject bot, GameState gameState) {
+    public TorpedoProcessorPlayer(GameObject bot, GameState gameState) {
         super(bot, gameState);
     }
 

@@ -39,14 +39,16 @@ public final class MathService {
         return ((Heading + 180) % 360);
     }
 
-    public static ArrayList<GameObject> getObjectsInArea(GameState state, Position pos, int radius) {
-        var objects = state.getGameObjects().stream().filter(
-                item -> getDistanceBetween(pos, item.getPosition()) < radius + item.getSize()
-        ).collect(Collectors.toList());
-        var players = state.getPlayerGameObjects().stream().filter(
-                item -> getDistanceBetween(pos, item.getPosition()) < radius + item.getSize()
-        ).collect(Collectors.toList());
-        ArrayList<GameObject> res = new ArrayList<>(objects.size() + players.size());
+    public static ArrayList<ObjectDistanceDto> getObjectsInArea(GameState state, Position pos, int radius) {
+        var objects = state.getGameObjects().stream()
+                .map(obj -> new ObjectDistanceDto(obj, getDistanceBetween(pos, obj.getPosition())))
+                .filter(item -> item.distance < radius + item.object.getSize()
+                ).collect(Collectors.toList());
+        var players = state.getPlayerGameObjects().stream()
+                .map(obj -> new ObjectDistanceDto(obj, getDistanceBetween(pos, obj.getPosition())))
+                .filter(item -> item.distance < radius + item.object.getSize()
+                ).collect(Collectors.toList());
+        ArrayList<ObjectDistanceDto> res = new ArrayList<>(objects.size() + players.size());
         res.addAll(objects);
         res.addAll(players);
         return res;

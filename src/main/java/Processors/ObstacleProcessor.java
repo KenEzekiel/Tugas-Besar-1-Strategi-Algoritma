@@ -38,7 +38,7 @@ public class ObstacleProcessor extends Processor {
                 ActionHeadingList.add(actionWeight);
             }
 
-            this.data.put(PlayerActions.FORWARD, ActionHeadingList);
+            this.data.put(PlayerActions.Forward, ActionHeadingList);
         }
     }
 }

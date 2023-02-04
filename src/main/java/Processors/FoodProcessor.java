@@ -28,7 +28,7 @@ public class FoodProcessor extends Processor {
 
         var array = new ArrayList<ActionWeight>(1);
         if (foodList.size() != 0) {
-            this.data.put(PlayerActions.FORWARD, array);
+            this.data.put(PlayerActions.Forward, array);
             for (GameObject obj : foodList) {
                 var value = obj.getGameObjectType() == ObjectTypes.FOOD ? VALUE : SUPER_VALUE;
                 double weight = value / MathService.getDistanceBetween(bot, obj);

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class MainProcessor extends Processor {
 
     private ActionWeight maxWeight = new ActionWeight(0, Double.NEGATIVE_INFINITY);
-    private PlayerActions bestAction = PlayerActions.STOP;
+    private PlayerActions bestAction = PlayerActions.Stop;
 
     public MainProcessor(GameObject bot, GameState gameState) {
         super(bot, gameState);

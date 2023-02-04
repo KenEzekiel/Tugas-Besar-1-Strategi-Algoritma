@@ -29,6 +29,6 @@ public class EdgeProcessor extends Processor {
             weight = 1000;
         }
         arr.add(new ActionWeight(heading, weight));
-        this.data.put(PlayerActions.FORWARD, arr);
+        this.data.put(PlayerActions.Forward, arr);
     }
 }

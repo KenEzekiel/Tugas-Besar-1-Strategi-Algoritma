@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class TorpedoProcessor extends Processor {
 
     final static double MINVAL = 5.0;
-    final static double VALUE = 100.0;
+    final static double VALUE = 1.0;
 
     public TorpedoProcessor(GameObject bot, GameState gameState) {
         super(bot, gameState);
@@ -51,7 +51,7 @@ public class TorpedoProcessor extends Processor {
                 var actionWeight = new ActionWeight(heading, weight);
                 ActionHeadingList.add(actionWeight);
             }
-            this.data.put(PlayerActions.FIRE_TORPEDOES, ActionHeadingList);
+            this.data.put(PlayerActions.FireTorpedoes, ActionHeadingList);
         }
     }
 }

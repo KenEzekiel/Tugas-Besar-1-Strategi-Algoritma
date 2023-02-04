@@ -53,4 +53,8 @@ public final class MathService {
         res.addAll(players);
         return res;
     }
+
+    public static double calcObjectValueBetweenObjects(GameObject obj1, GameObject obj2) {
+        return 0;
+    }
 }

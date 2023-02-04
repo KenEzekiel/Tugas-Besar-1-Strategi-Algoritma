@@ -1,13 +1,11 @@
 package Services;
 
-import Enums.PlayerActions;
 import Models.GameObject;
 import Models.GameState;
 import Models.PlayerAction;
 import Processors.MainProcessor;
 
 import java.util.Optional;
-import java.util.Random;
 
 public class BotService {
     private GameObject bot;
@@ -40,7 +38,9 @@ public class BotService {
 //      set player action nya apa aja, ini baru forward
 //        playerAction.action = PlayerActions.FORWARD;
         MainProcessor mainProcessor = new MainProcessor(bot, gameState);
-        mainProcessor.process(playerAction);
+        mainProcessor.process();
+        playerAction.action = mainProcessor.getBestAction();
+        playerAction.heading = mainProcessor.getMaxWeight().getHeading();
 //        playerAction.heading = new Random().nextInt(360);
 
         this.playerAction = playerAction;

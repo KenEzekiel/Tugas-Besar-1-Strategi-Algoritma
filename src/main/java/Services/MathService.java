@@ -1,18 +1,29 @@
 package Services;
 
 import Models.GameObject;
-import com.azure.core.annotation.Head;
+import Models.Position;
 
 public final class MathService {
     public static double getDistanceBetween(GameObject object1, GameObject object2) {
-        var triangleX = Math.abs(object1.getPosition().x - object2.getPosition().x);
-        var triangleY = Math.abs(object1.getPosition().y - object2.getPosition().y);
-        return Math.sqrt(triangleX * triangleX + triangleY * triangleY) - object1.size - object2.size;
+        return getDistanceBetween(object1.getPosition(), object2.getPosition()) - object1.size - object2.size;
+    }
+
+    public static double getDistanceBetween(double x1, double y1, double x2, double y2) {
+        var dx = Math.abs(x2 - x1);
+        var dy = Math.abs(y2 - y1);
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    public static double getDistanceBetween(Position p1, Position p2) {
+        return getDistanceBetween(p1.getX(), p1.getY(), p2.getX(), p2.getY());
     }
 
     public static int getHeadingBetween(GameObject bot, GameObject otherObject) {
-        var direction = toDegrees(Math.atan2(otherObject.getPosition().y - bot.getPosition().y,
-                otherObject.getPosition().x - bot.getPosition().x));
+        return getHeadingBetween(bot.getPosition(), otherObject.getPosition());
+    }
+
+    public static int getHeadingBetween(Position from, Position target) {
+        var direction = toDegrees(Math.atan2(target.getY() - from.getY(), target.getX() - from.getX()));
         return (direction + 360) % 360;
     }
 
@@ -20,5 +31,7 @@ public final class MathService {
         return (int) (v * (180 / Math.PI));
     }
 
-    public static int reverseHeading(int Heading) { return (int) ((Heading + 180) % 360); }
+    public static int reverseHeading(int Heading) {
+        return (int) ((Heading + 180) % 360);
+    }
 }

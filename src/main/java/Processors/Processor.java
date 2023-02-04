@@ -20,5 +20,11 @@ public abstract class Processor {
         this.data = new HashMap<>();
     }
 
+    public ArrayList<ActionWeight> initializeWeight(PlayerActions action) {
+        var arr = new ArrayList<ActionWeight>();
+        this.data.put(action, arr);
+        return arr;
+    }
+
     public abstract void process();
 }

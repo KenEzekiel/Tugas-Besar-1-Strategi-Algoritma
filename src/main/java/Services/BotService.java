@@ -43,6 +43,7 @@ public class BotService {
         playerAction.heading = mainProcessor.getMaxWeight().getHeading();
 //        playerAction.heading = new Random().nextInt(360);
 
+
         this.playerAction = playerAction;
     }
 

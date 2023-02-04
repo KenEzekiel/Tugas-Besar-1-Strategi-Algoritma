@@ -1,7 +1,11 @@
 package Services;
 
 import Models.GameObject;
+import Models.GameState;
 import Models.Position;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public final class MathService {
     public static double getDistanceBetween(GameObject object1, GameObject object2) {
@@ -32,6 +36,19 @@ public final class MathService {
     }
 
     public static int reverseHeading(int Heading) {
-        return (int) ((Heading + 180) % 360);
+        return ((Heading + 180) % 360);
+    }
+
+    public static ArrayList<GameObject> getObjectsInArea(GameState state, Position pos, int radius) {
+        var objects = state.getGameObjects().stream().filter(
+                item -> getDistanceBetween(pos, item.getPosition()) < radius + item.getSize()
+        ).collect(Collectors.toList());
+        var players = state.getPlayerGameObjects().stream().filter(
+                item -> getDistanceBetween(pos, item.getPosition()) < radius + item.getSize()
+        ).collect(Collectors.toList());
+        ArrayList<GameObject> res = new ArrayList<>(objects.size() + players.size());
+        res.addAll(objects);
+        res.addAll(players);
+        return res;
     }
 }

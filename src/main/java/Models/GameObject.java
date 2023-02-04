@@ -16,9 +16,10 @@ public class GameObject {
     public PlayerEffects effects;
     public Integer torpedoSalvoCount;
     public Integer supernovaAvailable;
+    public Integer teleporterCount;
     public Integer shieldCount;
 
-    public GameObject(UUID id, Integer size, Integer speed, Integer currentHeading, Position position, ObjectTypes gameObjectType, PlayerEffects effects, Integer torpedoSalvoCount, Integer supernovaAvailable, Integer shieldCount) {
+    public GameObject(UUID id, Integer size, Integer speed, Integer currentHeading, Position position, ObjectTypes gameObjectType, PlayerEffects effects, Integer torpedoSalvoCount, Integer supernovaAvailable, Integer teleporterCount, Integer shieldCount) {
         this.id = id;
         this.size = size;
         this.speed = speed;
@@ -28,7 +29,22 @@ public class GameObject {
         this.effects = effects;
         this.torpedoSalvoCount = torpedoSalvoCount;
         this.supernovaAvailable = supernovaAvailable;
+        this.teleporterCount = teleporterCount;
         this.shieldCount = shieldCount;
+    }
+
+    public GameObject(UUID id, Integer size, Integer speed, Integer currentHeading, Position position, ObjectTypes gameObjectType) {
+        this.id = id;
+        this.size = size;
+        this.speed = speed;
+        this.currentHeading = currentHeading;
+        this.position = position;
+        this.gameObjectType = gameObjectType;
+        this.effects = new PlayerEffects(0);
+        this.torpedoSalvoCount = 0;
+        this.supernovaAvailable = 0;
+        this.teleporterCount = 0;
+        this.shieldCount = 0;
     }
 
 
@@ -74,7 +90,10 @@ public class GameObject {
 
     public static GameObject FromStateList(UUID id, List<Integer> stateList) {
         Position position = new Position(stateList.get(4), stateList.get(5));
+        if (stateList.size() < 11) {
+            return new GameObject(id, stateList.get(0), stateList.get(1), stateList.get(2), position, ObjectTypes.valueOf((stateList.get((3)))));
+        }
         return new GameObject(id, stateList.get(0), stateList.get(1), stateList.get(2), position, ObjectTypes.valueOf(stateList.get(3)),
-                new PlayerEffects(stateList.get(6)), stateList.get(7), stateList.get(8), stateList.get(9));
+                new PlayerEffects(stateList.get(6)), stateList.get(7), stateList.get(8), stateList.get(9), stateList.get(10));
     }
 }

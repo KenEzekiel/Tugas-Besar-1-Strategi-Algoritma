@@ -11,7 +11,8 @@ import java.util.stream.Collectors;
 
 public class TorpedoProcessor extends Processor {
 
-    final static double MINVAL = 5.0;
+    // MINVAL is 16 to prevent self destruct
+    final static double MINVAL = 16.0;
     final static double VALUE = 1.0;
 
     public TorpedoProcessor(GameObject bot, GameState gameState) {
@@ -38,16 +39,18 @@ public class TorpedoProcessor extends Processor {
             var avgSize = _avgSize.isPresent() ? _avgSize.getAsDouble() : 0;
 
             for (GameObject obj : playerList) {
-                int heading = MathService.getHeadingBetween(bot, obj);
+
                 double distance = MathService.getDistanceBetween(bot, obj);
 //                double obstacleValue = ;
                 double hitRate = calculateHitRate(distance);
-                // 0.8 is priority value
-                double sizeValue = bot.getSize() < avgSize ? 0.8 : 1;
+                // 0.9 is priority value
+                double sizeValue = bot.getSize() < avgSize ? 0.9 : 1;
                 // 1.2 is priority value
                 double salvoValue = bot.torpedoSalvoCount == 5 ? 1.2 : 1;
                 // Can be changed, how near, or how many obstacles is in the way?
-                double weight = (VALUE * 10) * hitRate * sizeValue * salvoValue - MINVAL;
+                double weight = (VALUE * 10) * hitRate * sizeValue * salvoValue - 5;
+                // TODO : heading is to be redirected with projected point of time
+                int heading = MathService.getHeadingBetween(bot, obj);
                 var actionWeight = new ActionWeight(heading, weight);
                 ActionHeadingList.add(actionWeight);
             }

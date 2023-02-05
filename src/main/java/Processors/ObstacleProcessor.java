@@ -21,7 +21,6 @@ public class ObstacleProcessor extends Processor {
 
     @Override
     public void process() {
-
         if (!gameState.getGameObjects().isEmpty()) {
             var obstacleList = gameState.getGameObjects()
                     .stream().filter(item -> (item.getGameObjectType() == ObjectTypes.GAS_CLOUD || item.getGameObjectType() == ObjectTypes.ASTEROID_FIELD))
@@ -29,11 +28,11 @@ public class ObstacleProcessor extends Processor {
                             .comparing(item -> MathService.getDistanceBetween(bot, item)))
                     .collect(Collectors.toList());
             var ActionHeadingList = new ArrayList<ActionWeight>();
-
+            double worldDiameter = gameState.getWorld().radius * 2;
             for (GameObject obj : obstacleList) {
                 int heading = MathService.reverseHeading(MathService.getHeadingBetween(bot, obj));
                 // weight akan berpengaruh pada prioritas algoritma untuk mengambil action ini
-                double weight = MathService.getDistanceBetween(bot, obj) != 0? VALUE / MathService.getDistanceBetween(bot, obj) : VALUE / 0.00001;
+                double weight = VALUE * (worldDiameter - MathService.getDistanceBetween(bot, obj)) / worldDiameter;
                 var actionWeight = new ActionWeight(heading, weight);
                 ActionHeadingList.add(actionWeight);
             }

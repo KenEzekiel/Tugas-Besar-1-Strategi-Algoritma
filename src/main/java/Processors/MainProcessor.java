@@ -42,6 +42,7 @@ public class MainProcessor extends Processor {
                 this.bestAction = key;
             }
         }
+
     }
 
     public PlayerActions getBestAction() {

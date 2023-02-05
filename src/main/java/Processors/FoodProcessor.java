@@ -2,6 +2,7 @@ package Processors;
 
 import Enums.ObjectTypes;
 import Enums.PlayerActions;
+import Enums.PlayerEffects;
 import Models.ActionWeight;
 import Models.GameObject;
 import Models.GameState;
@@ -29,9 +30,14 @@ public class FoodProcessor extends Processor {
         var array = new ArrayList<ActionWeight>(1);
         if (foodList.size() != 0) {
             this.data.put(PlayerActions.Forward, array);
+            double worldDiameter = gameState.getWorld().radius * 2;
+            var isSuperFood = bot.effects.getState(PlayerEffects.SUPERFOOD);
             for (GameObject obj : foodList) {
-                var value = obj.getGameObjectType() == ObjectTypes.FOOD ? VALUE : SUPER_VALUE;
-                double weight = value / MathService.getDistanceBetween(bot, obj);
+                var value = VALUE;
+                if (isSuperFood && obj.getGameObjectType() == ObjectTypes.SUPER_FOOD) {
+                    value = SUPER_VALUE;
+                }
+                double weight = value * (worldDiameter - MathService.getDistanceBetween(bot, obj)) / worldDiameter;
                 var actionWeight = new ActionWeight(MathService.getHeadingBetween(bot, obj), weight);
                 array.add(actionWeight);
             }

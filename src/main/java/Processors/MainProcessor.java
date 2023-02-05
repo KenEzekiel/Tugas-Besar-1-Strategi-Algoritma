@@ -27,8 +27,11 @@ public class MainProcessor extends Processor {
         EdgeProcessor edgeProcessor = new EdgeProcessor(bot, gameState);
         processOneProcessor(edgeProcessor);
 
-        TorpedoProcessor torpedoProcessor = new TorpedoProcessor(bot, gameState);
-        processOneProcessor(torpedoProcessor);
+        TorpedoProcessorPlayer torpedoProcessorPlayer = new TorpedoProcessorPlayer(bot, gameState);
+        processOneProcessor(torpedoProcessorPlayer);
+
+        TorpedoProcessorObstacle torpedoProcessorObstacle = new TorpedoProcessorObstacle(bot, gameState);
+        processOneProcessor(torpedoProcessorObstacle);
     }
 
     private void processOneProcessor(Processor p) {

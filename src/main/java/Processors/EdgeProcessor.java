@@ -18,13 +18,12 @@ public class EdgeProcessor extends Processor {
 
     @Override
     public void process() {
-        var botPos = bot.getPosition();
+        var botPos = bot.getProjectedPosition();
         var worldCenter = new Position(0, 0);
         double distanceToCenter = MathService.getDistanceBetween(botPos, worldCenter);
         var arr = new ArrayList<ActionWeight>();
         var heading = MathService.getHeadingBetween(botPos, worldCenter);
         var weight = VALUE / (gameState.getWorld().getRadius() - distanceToCenter - bot.getSize());
-        weight = Math.min(VALUE, weight);
         if (weight < 0) {
             weight = 1000;
         }

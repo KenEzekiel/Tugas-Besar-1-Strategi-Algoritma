@@ -9,11 +9,12 @@ import Models.GameState;
 import Services.MathService;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 public class FoodProcessor extends Processor {
     final static double VALUE = 5.0;
-    final static double SUPER_VALUE = 7.5;
+    final static double SUPER_VALUE = 5.0;
 
 
     public FoodProcessor(GameObject bot, GameState gameState) {
@@ -22,9 +23,11 @@ public class FoodProcessor extends Processor {
 
     @Override
     public void process() {
+        var botPos = bot.getProjectedPosition();
         var foodList = gameState.getGameObjects()
                 .stream()
                 .filter(this::filterFood)
+                .sorted(Comparator.comparing(item -> MathService.getDistanceBetween(botPos, item.getPosition()) - bot.getSize() - item.getSize()))
                 .collect(Collectors.toList());
 
         var array = new ArrayList<ActionWeight>(1);
@@ -37,11 +40,16 @@ public class FoodProcessor extends Processor {
                 if (isSuperFood && obj.getGameObjectType() == ObjectTypes.SUPER_FOOD) {
                     value = SUPER_VALUE;
                 }
-                double weight = value * (worldDiameter - MathService.getDistanceBetween(bot, obj)) / worldDiameter;
-                var actionWeight = new ActionWeight(MathService.getHeadingBetween(bot, obj), weight);
+                var distance = MathService.getDistanceBetween(botPos, obj.getPosition()) - bot.getSize() - obj.getSize();
+//              jika pada proyeksi makanan sudah diambil, tidak perlu
+                if (distance < 0)
+                    continue;
+                double weight = value * Math.pow((worldDiameter - distance) / worldDiameter, 2.0);
+                var actionWeight = new ActionWeight(MathService.getHeadingBetween(botPos, obj.getPosition()), weight);
                 array.add(actionWeight);
             }
         }
+
     }
 
 
@@ -49,7 +57,7 @@ public class FoodProcessor extends Processor {
         if (item.getGameObjectType() != ObjectTypes.FOOD && item.getGameObjectType() != ObjectTypes.SUPER_FOOD)
             return false;
         // Jangan mengambil food yang di luar map
-        if (MathService.getDistanceBetween(item.getPosition(), gameState.world.centerPoint) >= gameState.world.radius)
+        if (MathService.getDistanceBetween(item.getPosition(), gameState.world.centerPoint) + 20 >= gameState.world.radius)
             return false;
         return true;
     }

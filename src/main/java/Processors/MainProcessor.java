@@ -6,7 +6,6 @@ import Models.GameObject;
 import Models.GameState;
 
 import java.util.Comparator;
-import java.util.stream.Collectors;
 
 public class MainProcessor extends Processor {
 
@@ -21,8 +20,8 @@ public class MainProcessor extends Processor {
         FoodProcessor foodProcessor = new FoodProcessor(bot, gameState);
         processOneProcessor(foodProcessor);
 
-        ObstacleProcessor obstacleProcessor = new ObstacleProcessor(bot, gameState);
-        processOneProcessor(obstacleProcessor);
+//        ObstacleProcessor obstacleProcessor = new ObstacleProcessor(bot, gameState);
+//        processOneProcessor(obstacleProcessor);
 
         EdgeProcessor edgeProcessor = new EdgeProcessor(bot, gameState);
         processOneProcessor(edgeProcessor);
@@ -38,11 +37,13 @@ public class MainProcessor extends Processor {
         p.process();
         for (var key : p.data.keySet()) {
             var value = p.data.get(key);
-            var res = value.stream().sorted(Comparator.comparing(ActionWeight::getWeight)).collect(Collectors.toList());
-            var maxWeight = res.get(res.size() - 1);
-            if (this.maxWeight.getWeight() < maxWeight.getWeight()) {
-                this.maxWeight = maxWeight;
-                this.bestAction = key;
+            var res = value.stream().max(Comparator.comparing(ActionWeight::getWeight));
+            if (res.isPresent()) {
+                var maxWeight = res.get();
+                if (this.maxWeight.getWeight() < maxWeight.getWeight()) {
+                    this.maxWeight = maxWeight;
+                    this.bestAction = key;
+                }
             }
         }
 

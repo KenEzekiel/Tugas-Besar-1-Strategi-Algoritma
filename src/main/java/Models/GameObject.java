@@ -88,6 +88,32 @@ public class GameObject {
         this.gameObjectType = gameObjectType;
     }
 
+    public Position getProjectedPosition() {
+        return getProjectedPosition(1);
+    }
+
+    public Position getProjectedPosition(int tickCount) {
+        var headingRad = Math.toRadians(this.currentHeading);
+        var startPosition = this.position;
+        int x = 0, y = 0;
+        if (this.currentHeading <= 90) {
+            x = startPosition.x + (int) Math.round(speed * Math.cos(headingRad)) * tickCount;
+            y = startPosition.y + (int) Math.round(speed * Math.sin(headingRad)) * tickCount;
+        } else if (this.currentHeading <= 180) {
+            x = startPosition.x - (int) Math.round(speed * Math.cos(Math.PI - headingRad)) * tickCount;
+            y = startPosition.y + (int) Math.round(speed * Math.sin(Math.PI - headingRad)) * tickCount;
+        } else if (this.currentHeading <= 270) {
+            x = startPosition.x - (int) Math.round(speed * Math.cos(headingRad - Math.PI)) * tickCount;
+            y = startPosition.y - (int) Math.round(speed * Math.sin(headingRad - Math.PI)) * tickCount;
+
+        } else if (this.currentHeading <= 360) {
+            x = startPosition.x + (int) Math.round(speed * Math.cos(2 * Math.PI - headingRad)) * tickCount;
+            y = startPosition.y - (int) Math.round(speed * Math.sin(2 * Math.PI - headingRad)) * tickCount;
+        }
+
+        return new Position(x, y);
+    }
+
     public static GameObject FromStateList(UUID id, List<Integer> stateList) {
         Position position = new Position(stateList.get(4), stateList.get(5));
         if (stateList.size() < 11) {

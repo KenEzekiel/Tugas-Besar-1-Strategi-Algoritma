@@ -21,11 +21,13 @@ public class TorpedoProcessorPlayer extends Processor {
 
 
     private double calculateHitRate(double distance) {
-        return 1 - (distance / gameState.getWorld().getRadius());
+        var worldDiameter = gameState.getWorld().getRadius() * 2;
+        return (worldDiameter - distance) / worldDiameter;
     }
 
     @Override
     public void process() {
+        var botPos = bot.getProjectedPosition();
         // player nearest
         var playerList = gameState.getPlayerGameObjects()
                 .stream().filter(item -> (item.id != bot.id))
@@ -39,18 +41,18 @@ public class TorpedoProcessorPlayer extends Processor {
             var avgSize = _avgSize.isPresent() ? _avgSize.getAsDouble() : 0;
 
             for (GameObject obj : playerList) {
-
-                double distance = MathService.getDistanceBetween(bot, obj);
+                var objPos = obj.getProjectedPosition();
+                double distance = MathService.getDistanceBetween(botPos, objPos) - bot.getSize() - obj.getSize();
 //                double obstacleValue = ;
                 double hitRate = calculateHitRate(distance);
                 // 0.9 is priority value
-                double sizeValue = bot.getSize() < avgSize ? 0.9 : 1;
+                double sizeValue = obj.getSize() < avgSize ? 1 : 1.5;
                 // 1.2 is priority value
-                double salvoValue = bot.torpedoSalvoCount == 5 ? 1.2 : 1;
+                double salvoValue = bot.torpedoSalvoCount == 5 ? 1.1 : 1;
                 // Can be changed, how near, or how many obstacles is in the way?
-                double weight = (VALUE * 10) * hitRate * sizeValue * salvoValue - 5;
+                double weight = (VALUE * 10) * hitRate * sizeValue * salvoValue - 4;
                 // TODO : heading is to be redirected with projected point of time
-                int heading = MathService.getHeadingBetween(bot, obj);
+                int heading = MathService.getHeadingBetween(botPos, objPos);
                 var actionWeight = new ActionWeight(heading, weight);
                 ActionHeadingList.add(actionWeight);
             }

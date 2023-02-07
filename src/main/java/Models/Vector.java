@@ -62,6 +62,11 @@ public class Vector {
         double distance = length(minus(this, projVector));
         return (distance <= threshold) && (isBetween(projVector, refVector));
     }
-
+    public static Vector degreeToUnit(int degree) {
+        double radian = Math.toRadians(degree);
+        double x = Math.cos(radian);
+        double y = Math.sin(radian);
+        return new Vector(x, y);
+    }
 }
 

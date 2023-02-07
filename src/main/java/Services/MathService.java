@@ -33,7 +33,7 @@ public final class MathService {
     }
 
     public static int toDegrees(double v) {
-        return (int) (v * (180 / Math.PI));
+        return (int) Math.round(v * (180 / Math.PI));
     }
 
     public static int reverseHeading(int Heading) {

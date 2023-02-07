@@ -9,22 +9,25 @@ import Services.MathService;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class TorpedoProcessor extends Processor {
+public class TorpedoProcessorPlayer extends Processor {
 
-    final static double MINVAL = 5.0;
+    // MINVAL is 16 to prevent self destruct
+    final static double MINVAL = 16.0;
     final static double VALUE = 1.0;
 
-    public TorpedoProcessor(GameObject bot, GameState gameState) {
+    public TorpedoProcessorPlayer(GameObject bot, GameState gameState) {
         super(bot, gameState);
     }
 
 
     private double calculateHitRate(double distance) {
-        return 1 - (distance / gameState.getWorld().getRadius());
+        var worldDiameter = gameState.getWorld().getRadius() * 2;
+        return (worldDiameter - distance) / worldDiameter;
     }
 
     @Override
     public void process() {
+        var botPos = bot.getProjectedPosition();
         // player nearest
         var playerList = gameState.getPlayerGameObjects()
                 .stream().filter(item -> (item.id != bot.id))
@@ -38,16 +41,18 @@ public class TorpedoProcessor extends Processor {
             var avgSize = _avgSize.isPresent() ? _avgSize.getAsDouble() : 0;
 
             for (GameObject obj : playerList) {
-                int heading = MathService.getHeadingBetween(bot, obj);
-                double distance = MathService.getDistanceBetween(bot, obj);
+                var objPos = obj.getProjectedPosition();
+                double distance = MathService.getDistanceBetween(botPos, objPos) - bot.getSize() - obj.getSize();
 //                double obstacleValue = ;
                 double hitRate = calculateHitRate(distance);
-                // 0.8 is priority value
-                double sizeValue = bot.getSize() < avgSize ? 0.8 : 1;
+                // 0.9 is priority value
+                double sizeValue = obj.getSize() < avgSize ? 1 : 1.5;
                 // 1.2 is priority value
-                double salvoValue = bot.torpedoSalvoCount == 5 ? 1.2 : 1;
+                double salvoValue = bot.torpedoSalvoCount == 5 ? 1.1 : 1;
                 // Can be changed, how near, or how many obstacles is in the way?
-                double weight = (VALUE * 10) * hitRate * sizeValue * salvoValue - MINVAL;
+                double weight = (VALUE * 10) * hitRate * sizeValue * salvoValue - 4;
+                // TODO : heading is to be redirected with projected point of time
+                int heading = MathService.getHeadingBetween(botPos, objPos);
                 var actionWeight = new ActionWeight(heading, weight);
                 ActionHeadingList.add(actionWeight);
             }

@@ -3,6 +3,7 @@ package Services;
 import Models.GameObject;
 import Models.GameState;
 import Models.Position;
+import Models.Vector;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -54,7 +55,12 @@ public final class MathService {
         return res;
     }
 
-    public static double calcObjectValueBetweenObjects(GameObject obj1, GameObject obj2) {
-        return 0;
+    public static int calcObjectValueBetweenObjects(GameState state, GameObject obj1, GameObject obj2, int threshold) {
+        Vector refVector = new Vector(obj1.getPosition(), obj2.getPosition());
+        return state.getGameObjects().stream()
+                .filter(obj -> new Vector(obj1.getPosition(),obj.getPosition()).isCloseToVector(refVector, threshold))
+                .mapToInt(GameObject::getSize).sum();
+
     }
+
 }

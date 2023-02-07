@@ -43,14 +43,14 @@ public class TorpedoProcessorPlayer extends Processor {
             for (GameObject obj : playerList) {
                 var objPos = obj.getProjectedPosition();
                 double distance = MathService.getDistanceBetween(botPos, objPos) - bot.getSize() - obj.getSize();
-//                double obstacleValue = ;
+                double obstacleValue = MathService.calcObjectValueBetweenObjects(gameState, bot, obj, 5);
                 double hitRate = calculateHitRate(distance);
                 // 0.9 is priority value
                 double sizeValue = obj.getSize() < avgSize ? 1 : 1.5;
                 // 1.2 is priority value
                 double salvoValue = bot.torpedoSalvoCount == 5 ? 1.1 : 1;
-                // Can be changed, how near, or how many obstacles is in the way?
-                double weight = (VALUE * 10) * hitRate * sizeValue * salvoValue - 4;
+                // Can be changed, need a function design
+                double weight = (VALUE * 10) * hitRate * sizeValue * salvoValue - obstacleValue;
                 // TODO : heading is to be redirected with projected point of time
                 int heading = MathService.getHeadingBetween(botPos, objPos);
                 var actionWeight = new ActionWeight(heading, weight);

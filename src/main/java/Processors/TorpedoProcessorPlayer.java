@@ -13,7 +13,7 @@ public class TorpedoProcessorPlayer extends Processor {
 
     // MINVAL is 16 to prevent self destruct
     final static double MINVAL = 16.0;
-    final static double VALUE = 1.0;
+    final static double VALUE = 10.0;
 
     public TorpedoProcessorPlayer(GameObject bot, GameState gameState) {
         super(bot, gameState);
@@ -43,15 +43,12 @@ public class TorpedoProcessorPlayer extends Processor {
             for (GameObject obj : playerList) {
                 var objPos = obj.getProjectedPosition();
                 double distance = MathService.getDistanceBetween(botPos, objPos) - bot.getSize() - obj.getSize();
-                double obstacleValue = MathService.calcObjectValueBetweenObjects(gameState.getGameObjects(), bot.getPosition(), obj.getPosition(), 5);
-                double hitRate = calculateHitRate(distance);
-                // 0.9 is priority value
-                double sizeValue = obj.getSize() < avgSize ? 1 : 1.5;
-                // 1.2 is priority value
-                double salvoValue = bot.torpedoSalvoCount == 5 ? 1.1 : 1;
+                double obstacleValue = MathService.calcObjectValueBetweenObjects(gameState.getGameObjects(), bot.getPosition(), obj.getPosition(), 3);
+                boolean guarantee = MathService.guaranteeHitTorpedo(bot.getPosition(), obj);
+                double hitRate = guarantee ? 1 : 0.5;
+                double sizeValue = obj.getSize() < avgSize ? 0.75 : 1;
                 // Can be changed, need a function design
-                double weight = (VALUE * 10) * hitRate * sizeValue * salvoValue - obstacleValue;
-                // TODO : heading is to be redirected with projected point of time
+                double weight = (VALUE - obstacleValue) * hitRate * sizeValue;
                 int heading = MathService.getHeadingBetween(botPos, objPos);
                 var actionWeight = new ActionWeight(heading, weight);
                 ActionHeadingList.add(actionWeight);

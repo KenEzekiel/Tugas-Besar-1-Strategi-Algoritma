@@ -24,19 +24,24 @@ public class ObstacleProcessor extends Processor {
         if (!gameState.getGameObjects().isEmpty()) {
             var botPos = bot.getProjectedPosition();
             var obstacleList = gameState.getGameObjects()
-                    .stream().filter(item -> (item.getGameObjectType() == ObjectTypes.GAS_CLOUD || item.getGameObjectType() == ObjectTypes.ASTEROID_FIELD))
-                    .sorted(Comparator
-                            .comparing(item -> MathService.getDistanceBetween(botPos, item.getPosition()) - bot.getSize() - item.getSize()))
+                    .stream().filter(item -> (item.getGameObjectType() == ObjectTypes.GAS_CLOUD))
                     .collect(Collectors.toList());
             var ActionHeadingList = new ArrayList<ActionWeight>();
             double worldDiameter = gameState.getWorld().radius * 2;
             for (GameObject obj : obstacleList) {
-                int heading = MathService.reverseHeading(MathService.getHeadingBetween(botPos, obj.getPosition()));
+                int heading;
                 var distance = MathService.getDistanceBetween(botPos, obj.getPosition()) - bot.getSize() - obj.getSize();
-                // weight akan berpengaruh pada prioritas algoritma untuk mengambil action ini
-                double weight = VALUE * (worldDiameter - distance) / worldDiameter;
-                var actionWeight = new ActionWeight(heading, weight);
-                ActionHeadingList.add(actionWeight);
+                if (distance <= 6) {
+                    if (distance < 3) {
+                        heading = MathService.reverseHeading(MathService.getHeadingBetween(botPos, obj.getPosition()));
+                    } else {
+                        heading = (MathService.getHeadingBetween(botPos, obj.getPosition()) + 90) % 360;
+                    }
+                    // weight akan berpengaruh pada prioritas algoritma untuk mengambil action ini
+                    double weight = 500;
+                    var actionWeight = new ActionWeight(heading, weight);
+                    ActionHeadingList.add(actionWeight);
+                }
             }
 
             this.data.put(PlayerActions.Forward, ActionHeadingList);

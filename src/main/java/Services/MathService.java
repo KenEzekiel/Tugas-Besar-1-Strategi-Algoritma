@@ -17,7 +17,7 @@ public final class MathService {
     public static double getDistanceBetween(double x1, double y1, double x2, double y2) {
         var dx = Math.abs(x2 - x1);
         var dy = Math.abs(y2 - y1);
-        return Math.sqrt(dx * dx + dy * dy);
+        return Math.round(Math.sqrt(dx * dx + dy * dy));
     }
 
     public static double getDistanceBetween(Position p1, Position p2) {
@@ -56,17 +56,18 @@ public final class MathService {
         return res;
     }
 
-    public static int calcObjectValueBetweenObjects(GameState state, Position obj1, Position obj2, int threshold) {
-        Vector refVector = new Vector(obj1, obj2);
+    public static int calcObjectValueBetweenObjects(GameState state, Position pos1, Position pos2, int threshold) {
+        Vector refVector = new Vector(pos1, pos2);
         return state.getGameObjects().stream()
                 .filter(obj -> obj.getGameObjectType() == ObjectTypes.FOOD ||
                         obj.getGameObjectType() == ObjectTypes.GAS_CLOUD ||
                         obj.getGameObjectType() == ObjectTypes.ASTEROID_FIELD ||
                         obj.getGameObjectType() == ObjectTypes.SUPER_FOOD)
-                .filter(obj -> new Vector(obj1, obj.getPosition()).isCloseToVector(refVector, threshold))
+                .filter(obj -> new Vector(pos1, obj.getPosition()).isCloseToVector(refVector, threshold))
                 .mapToInt(GameObject::getSize).sum();
 
     }
+
     public static boolean guaranteeHitTorpedo(Position firePos, GameObject targetPlayer) {
         int modifierConstant = 1;
         int torpedoSpeed = 10;
@@ -74,6 +75,10 @@ public final class MathService {
         double distance = getDistanceBetween(firePos, targetPlayer.getPosition());
         int size = targetPlayer.getSize();
         return (200 * distance < shipSize * shipSize * torpedoSpeed);
+    }
+
+    public static boolean isCollide(GameObject obj1, GameObject obj2) {
+        return getDistanceBetween(obj1, obj2) < 0;
     }
 }
 

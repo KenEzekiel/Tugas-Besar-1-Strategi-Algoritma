@@ -43,7 +43,7 @@ public class TorpedoProcessorPlayer extends Processor {
             for (GameObject obj : playerList) {
                 var objPos = obj.getProjectedPosition();
                 double distance = MathService.getDistanceBetween(botPos, objPos) - bot.getSize() - obj.getSize();
-                double obstacleValue = MathService.calcObjectValueBetweenObjects(gameState, bot, obj, 5);
+                double obstacleValue = MathService.calcObjectValueBetweenObjects(gameState, bot.getPosition(), obj.getPosition(), 5);
                 double hitRate = calculateHitRate(distance);
                 // 0.9 is priority value
                 double sizeValue = obj.getSize() < avgSize ? 1 : 1.5;

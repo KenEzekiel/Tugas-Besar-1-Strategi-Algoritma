@@ -1,11 +1,15 @@
 package Services;
 
+import Enums.ObjectTypes;
+import Enums.PlayerActions;
 import Models.GameObject;
 import Models.GameState;
 import Models.PlayerAction;
 import Processors.MainProcessor;
 
+import java.util.Comparator;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class BotService {
     private GameObject bot;
@@ -13,6 +17,8 @@ public class BotService {
     private GameState gameState;
 
     private GameObject firedTeleport;
+    private boolean hasJustFiredTeleport;
+    private int teleportHeading;
 
     public BotService() {
         this.playerAction = new PlayerAction();
@@ -41,12 +47,27 @@ public class BotService {
     }
 
     public void computeNextPlayerAction(PlayerAction playerAction) {
+        if (this.hasJustFiredTeleport) {
+            var nearestTeleport = gameState.getGameObjects()
+                                                    .stream().filter(item -> item.getGameObjectType() == ObjectTypes.TELEPORTER)
+                                                    .min(Comparator.comparing(item -> MathService.getDistanceBetween(bot.getPosition(), item.getPosition())));
+            if (nearestTeleport.isPresent()) {
+                this.firedTeleport = nearestTeleport.get();
+            }
+        }
         MainProcessor mainProcessor = new MainProcessor(bot, gameState);
         mainProcessor.process();
         playerAction.action = mainProcessor.getBestAction();
         playerAction.heading = mainProcessor.getMaxWeight().getHeading();
 
         this.playerAction = playerAction;
+        if (playerAction.action == PlayerActions.FireTeleporter) {
+            this.hasJustFiredTeleport = true;
+            this.teleportHeading = playerAction.heading;
+        } else {
+            this.hasJustFiredTeleport = false;
+            this.teleportHeading = 0;
+        }
     }
 
     public GameState getGameState() {

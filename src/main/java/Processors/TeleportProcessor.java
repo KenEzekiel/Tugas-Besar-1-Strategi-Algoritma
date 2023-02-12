@@ -28,10 +28,12 @@ public class TeleportProcessor extends Processor {
 
         if (bot.teleporterCount > 0 && bot.getSize() > 15 + 20) {
              for (GameObject ply : playerList) {
-                 if (ply.getSize() <= bot.getSize() * 0.5) {
+                 if (ply.getSize() <= bot.getSize() * 0.7) {
                      int heading = MathService.getHeadingBetween(bot, ply);
                      // weighting
-                     double weight = 10;
+                     boolean guarantee = MathService.guaranteeHitTorpedo(bot.getPosition(), ply);
+                     double hitRate = guarantee ? 1 : 0.2;
+                     double weight = ply.getSize() * hitRate;
                      var actionWeight = new ActionWeight(heading, weight);
                      ActionHeadingList.add(actionWeight);
                  }

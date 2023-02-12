@@ -6,6 +6,11 @@ import Enums.PlayerEffects;
 import java.util.List;
 import java.util.UUID;
 
+import static Models.Vector.projection;
+import static Models.Vector.length;
+import static Models.Vector.minus;
+import static Models.Vector.isBetween;
+
 public class GameObject {
     public UUID id;
     public Integer size;
@@ -132,4 +137,13 @@ public class GameObject {
         return new GameObject(id, stateList.get(0), stateList.get(1), stateList.get(2), position, ObjectTypes.valueOf(stateList.get(3)),
                 new PlayerEffects(stateList.get(6)), stateList.get(7), stateList.get(8), stateList.get(9), stateList.get(10));
     }
+    public boolean isObjectCloseToVector(Position startPos, Position endPos, int threshold) {
+        Vector refVector = new Vector(startPos, endPos);
+        Vector objVector = new Vector(startPos, this.getPosition());
+        Vector projVector = projection(objVector, refVector);
+        double distance = length(minus(objVector, projVector));
+        return (distance - this.getSize() <= threshold) && (isBetween(projVector, refVector));
+    }
 }
+
+

@@ -23,10 +23,15 @@ public class EdgeProcessor extends Processor {
         double distanceToCenter = MathService.getDistanceBetween(botPos, worldCenter);
         var arr = new ArrayList<ActionWeight>();
         var heading = MathService.getHeadingBetween(botPos, worldCenter);
-        var weight = VALUE / (gameState.getWorld().getRadius() - distanceToCenter - bot.getSize());
-        if (weight < 0) {
+        double weight;
+        if (gameState.getWorld().getRadius() - distanceToCenter - bot.getSize() < 5) {
             weight = 1000;
+        } else {
+            weight = 0;
         }
+//        if (weight < 0) {
+//            weight = 1000;
+//        }
         arr.add(new ActionWeight(heading, weight));
         this.data.put(PlayerActions.Forward, arr);
     }

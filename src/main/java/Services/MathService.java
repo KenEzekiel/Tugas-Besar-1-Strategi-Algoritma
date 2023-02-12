@@ -70,12 +70,12 @@ public final class MathService {
     }
 
     public static boolean guaranteeHitTorpedo(Position firePos, GameObject targetPlayer) {
-        int modifierConstant = 1;
+        double modifierConstant = 1.5;
         int torpedoSpeed = 20;
         double shipSize = (double) targetPlayer.getSize();
         double distance = getDistanceBetween(firePos, targetPlayer.getPosition());
         int size = targetPlayer.getSize();
-        return (200 * distance < shipSize * shipSize * torpedoSpeed);
+        return (200 * distance <= shipSize * shipSize * torpedoSpeed * modifierConstant);
     }
 
     public static boolean isCollide(GameObject obj1, GameObject obj2) {

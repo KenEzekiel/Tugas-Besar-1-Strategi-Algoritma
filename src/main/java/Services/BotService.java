@@ -12,6 +12,8 @@ public class BotService {
     private PlayerAction playerAction;
     private GameState gameState;
 
+    private GameObject firedTeleport;
+
     public BotService() {
         this.playerAction = new PlayerAction();
         this.gameState = new GameState();
@@ -26,6 +28,10 @@ public class BotService {
         this.bot = bot;
     }
 
+    public void setFiredTeleport(GameObject teleport) { this.firedTeleport = teleport; }
+
+    public GameObject getFiredTeleport() { return this.firedTeleport; }
+
     public PlayerAction getPlayerAction() {
         return this.playerAction;
     }
@@ -35,13 +41,10 @@ public class BotService {
     }
 
     public void computeNextPlayerAction(PlayerAction playerAction) {
-//      set player action nya apa aja, ini baru forward
-//        playerAction.action = PlayerActions.FORWARD;
         MainProcessor mainProcessor = new MainProcessor(bot, gameState);
         mainProcessor.process();
         playerAction.action = mainProcessor.getBestAction();
         playerAction.heading = mainProcessor.getMaxWeight().getHeading();
-//        playerAction.heading = new Random().nextInt(360);
 
         this.playerAction = playerAction;
     }

@@ -41,7 +41,6 @@ public class FoodProcessor extends Processor {
         var heading = MathService.getHeadingBetween(botPos, nearest.getPosition());
 
         if (MathService.getDegreeDifference(heading, bot.currentHeading) > 120) {
-            System.out.println("\n\n\n\nJANGAN MUTER ANJINGHGGGGGAOISJFAIPOJSDP\n\n\n");
             heading = bot.currentHeading;
         }
         // TODO: cek di currentHeading ada food atau ngga, kasih treshold misal 30 derajat

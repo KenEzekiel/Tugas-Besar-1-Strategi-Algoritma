@@ -27,7 +27,7 @@ public class EdgeProcessor extends Processor {
         if (gameState.getWorld().getRadius() - distanceToCenter - bot.getSize() < 5) {
             weight = 1000;
         } else {
-            weight = 0;
+            weight = 2;
         }
 //        if (weight < 0) {
 //            weight = 1000;

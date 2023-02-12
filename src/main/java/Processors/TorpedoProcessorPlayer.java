@@ -48,7 +48,7 @@ public class TorpedoProcessorPlayer extends Processor {
                 double hitRate = guarantee ? 1 : 0.5;
                 double sizeValue = obj.getSize() < avgSize ? 0.75 : 1;
                 // Can be changed, need a function design
-                double weight = (VALUE - obstacleValue) * hitRate * sizeValue;
+                double weight = (VALUE - obstacleValue - 5) * hitRate * sizeValue;
                 int heading = MathService.getHeadingBetween(botPos, objPos);
                 var actionWeight = new ActionWeight(heading, weight);
                 ActionHeadingList.add(actionWeight);

@@ -71,7 +71,7 @@ public final class MathService {
 
     public static boolean guaranteeHitTorpedo(Position firePos, GameObject targetPlayer) {
         int modifierConstant = 1;
-        int torpedoSpeed = 10;
+        int torpedoSpeed = 20;
         double shipSize = (double) targetPlayer.getSize();
         double distance = getDistanceBetween(firePos, targetPlayer.getPosition());
         int size = targetPlayer.getSize();

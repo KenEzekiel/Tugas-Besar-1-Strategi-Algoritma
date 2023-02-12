@@ -58,9 +58,13 @@ public final class MathService {
     public static int calcObjectValueBetweenObjects(GameState state, GameObject obj1, GameObject obj2, int threshold) {
         Vector refVector = new Vector(obj1.getPosition(), obj2.getPosition());
         return state.getGameObjects().stream()
-                .filter(obj -> new Vector(obj1.getPosition(),obj.getPosition()).isCloseToVector(refVector, threshold))
+                .filter(obj -> new Vector(obj1.getPosition(), obj.getPosition()).isCloseToVector(refVector, threshold))
                 .mapToInt(GameObject::getSize).sum();
 
+    }
+
+    public static boolean isCollide(GameObject obj1, GameObject obj2) {
+        return getDistanceBetween(obj1, obj2) < 0;
     }
 
 }

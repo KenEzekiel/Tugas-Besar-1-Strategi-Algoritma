@@ -23,14 +23,14 @@ public class MainProcessor extends Processor {
 //        ObstacleProcessor obstacleProcessor = new ObstacleProcessor(bot, gameState);
 //        processOneProcessor(obstacleProcessor);
 
-        EdgeProcessor edgeProcessor = new EdgeProcessor(bot, gameState);
-        processOneProcessor(edgeProcessor);
-
-        TorpedoProcessorPlayer torpedoProcessorPlayer = new TorpedoProcessorPlayer(bot, gameState);
-        processOneProcessor(torpedoProcessorPlayer);
-
-        TorpedoProcessorObstacle torpedoProcessorObstacle = new TorpedoProcessorObstacle(bot, gameState);
-        processOneProcessor(torpedoProcessorObstacle);
+//        EdgeProcessor edgeProcessor = new EdgeProcessor(bot, gameState);
+//        processOneProcessor(edgeProcessor);
+//
+//        TorpedoProcessorPlayer torpedoProcessorPlayer = new TorpedoProcessorPlayer(bot, gameState);
+//        processOneProcessor(torpedoProcessorPlayer);
+//
+//        TorpedoProcessorObstacle torpedoProcessorObstacle = new TorpedoProcessorObstacle(bot, gameState);
+//        processOneProcessor(torpedoProcessorObstacle);
     }
 
     private void processOneProcessor(Processor p) {

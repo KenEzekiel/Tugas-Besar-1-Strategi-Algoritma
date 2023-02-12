@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Main {
 
@@ -48,6 +49,9 @@ public class Main {
             botService.setBot(bot);
         }, UUID.class);
 
+        AtomicLong lastSendAction = new AtomicLong(System.currentTimeMillis());
+        AtomicLong lastNewState = new AtomicLong(lastSendAction.get() - 1);
+
         hubConnection.on("ReceiveGameState", (gameStateDto) -> {
             GameState gameState = new GameState();
             gameState.world = gameStateDto.getWorld();
@@ -61,6 +65,7 @@ public class Main {
             }
 
             botService.setGameState(gameState);
+            lastNewState.set(System.currentTimeMillis());
         }, GameStateDto.class);
 
         hubConnection.start().blockingAwait();
@@ -72,16 +77,16 @@ public class Main {
         //This is a blocking call
         hubConnection.start().subscribe(() -> {
             while (hubConnection.getConnectionState() == HubConnectionState.CONNECTED) {
-                Thread.sleep(50);
 
                 GameObject bot = botService.getBot();
-                if (bot == null) {
+                if (bot == null || lastSendAction.get() > lastNewState.get()) {
                     continue;
                 }
 
                 botService.getPlayerAction().setPlayerId(bot.getId());
                 botService.computeNextPlayerAction(botService.getPlayerAction());
                 if (hubConnection.getConnectionState() == HubConnectionState.CONNECTED) {
+                    lastSendAction.set(System.currentTimeMillis());
                     hubConnection.send("SendPlayerAction", botService.getPlayerAction());
                 }
             }

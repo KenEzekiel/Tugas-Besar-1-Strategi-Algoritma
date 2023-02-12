@@ -9,12 +9,12 @@ import Models.GameState;
 import Services.MathService;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class FoodProcessor extends Processor {
     final static double VALUE = 5.0;
-    final static double SUPER_VALUE = 5.0;
+    final static double SUPER_VALUE = 6.0;
 
 
     public FoodProcessor(GameObject bot, GameState gameState) {
@@ -23,11 +23,11 @@ public class FoodProcessor extends Processor {
 
     @Override
     public void process() {
-        var botPos = bot.getProjectedPosition();
+        var botPos = bot.getProjectedPosition(1);
+        var obstacle = gameState.getGameObjects().stream().filter(item -> item.getGameObjectType() == ObjectTypes.GAS_CLOUD).collect(Collectors.toList());
         var foodList = gameState.getGameObjects()
                 .stream()
-                .filter(this::filterFood)
-                .sorted(Comparator.comparing(item -> MathService.getDistanceBetween(botPos, item.getPosition()) - bot.getSize() - item.getSize()))
+                .filter(item -> filterFood(item, obstacle))
                 .collect(Collectors.toList());
 
         var array = new ArrayList<ActionWeight>(1);
@@ -53,12 +53,16 @@ public class FoodProcessor extends Processor {
     }
 
 
-    boolean filterFood(GameObject item) {
+    boolean filterFood(GameObject item, List<GameObject> obstacles) {
         if (item.getGameObjectType() != ObjectTypes.FOOD && item.getGameObjectType() != ObjectTypes.SUPER_FOOD)
             return false;
         // Jangan mengambil food yang di luar map
         if (MathService.getDistanceBetween(item.getPosition(), gameState.world.centerPoint) + 20 >= gameState.world.radius)
             return false;
+
+        for (var obs : obstacles) {
+            if (MathService.isCollide(item, obs)) return false;
+        }
         return true;
     }
 

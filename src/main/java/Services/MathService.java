@@ -81,5 +81,13 @@ public final class MathService {
     public static boolean isCollide(GameObject obj1, GameObject obj2) {
         return getDistanceBetween(obj1, obj2) < 0;
     }
+
+    public static int getDegreeDifference(int degree1, int degree2) {
+        var dif = Math.abs(degree1 - degree2);
+        if (dif <= 180) {
+            return dif;
+        }
+        return 360 - dif;
+    }
 }
 

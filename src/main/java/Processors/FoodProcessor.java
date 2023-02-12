@@ -25,17 +25,24 @@ public class FoodProcessor extends Processor {
     public void process() {
         var botPos = bot.getPosition();
         var obstacle = gameState.getGameObjects().stream().filter(item -> item.getGameObjectType() == ObjectTypes.GAS_CLOUD).collect(Collectors.toList());
-        var nearestFood = gameState.getGameObjects()
+        var filtered = gameState.getGameObjects()
                 .stream()
                 .filter(item -> filterFood(item, obstacle, botPos))
-                .min(Comparator.comparing(item -> MathService.getDistanceBetween(botPos, item.getPosition()) - bot.getSize() - item.getSize()));
-        if (nearestFood.isPresent()) {
-            var array = new ArrayList<ActionWeight>(1);
-            this.data.put(PlayerActions.Forward, array);
-            var obj = nearestFood.get();
-            var actionWeight = new ActionWeight(MathService.getHeadingBetween(botPos, obj.getPosition()), VALUE);
-            array.add(actionWeight);
+                .collect(Collectors.toList());
+        var _nearest = filtered.stream()
+                .min(Comparator.comparing(item -> MathService.getDistanceBetween(bot, item)));
+        if (_nearest.isEmpty()) {
+            return;
         }
+        var nearest = _nearest.get();
+
+        var array = new ArrayList<ActionWeight>(1);
+        this.data.put(PlayerActions.Forward, array);
+        var heading = MathService.getHeadingBetween(botPos, nearest.getPosition());
+        // TODO: cek di currentHeading ada food atau ngga, kasih treshold misal 30 derajat
+        var actionWeight = new ActionWeight(
+                MathService.getDegreeDifference(heading, bot.currentHeading) > 150 ? bot.currentHeading : heading, VALUE);
+        array.add(actionWeight);
     }
 
 
@@ -45,9 +52,6 @@ public class FoodProcessor extends Processor {
         // Jangan mengambil food yang di luar map
         if (MathService.getDistanceBetween(item.getPosition(), gameState.world.centerPoint) + bot.getSize() >= gameState.world.radius)
             return false;
-        var distance = MathService.getDistanceBetween(botPos, item.getPosition()) - bot.getSize() - item.getSize();
-        if (distance < 0) return false;
-
         for (var obs : obstacles) {
             if (MathService.isCollide(item, obs)) return false;
         }

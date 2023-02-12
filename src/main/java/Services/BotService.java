@@ -34,9 +34,13 @@ public class BotService {
         this.bot = bot;
     }
 
-    public void setFiredTeleport(GameObject teleport) { this.firedTeleport = teleport; }
+    public void setFiredTeleport(GameObject teleport) {
+        this.firedTeleport = teleport;
+    }
 
-    public GameObject getFiredTeleport() { return this.firedTeleport; }
+    public GameObject getFiredTeleport() {
+        return this.firedTeleport;
+    }
 
     public PlayerAction getPlayerAction() {
         return this.playerAction;
@@ -47,14 +51,17 @@ public class BotService {
     }
 
     public void computeNextPlayerAction(PlayerAction playerAction) {
-        if (this.hasJustFiredTeleport) {
-            var nearestTeleport = gameState.getGameObjects()
-                                                    .stream().filter(item -> item.getGameObjectType() == ObjectTypes.TELEPORTER)
-                                                    .min(Comparator.comparing(item -> MathService.getDistanceBetween(bot.getPosition(), item.getPosition())));
-            if (nearestTeleport.isPresent()) {
-                this.firedTeleport = nearestTeleport.get();
-            }
+        var teleports = gameState.getGameObjects()
+                .stream().filter(item -> item.getGameObjectType() == ObjectTypes.TELEPORTER).collect(Collectors.toList());
+        if (teleports.stream().noneMatch(item -> item.getId().equals(this.firedTeleport.getId()))) {
+            this.firedTeleport = null;
         }
+        if (this.hasJustFiredTeleport) {
+            var nearestTeleport = teleports.stream()
+                    .min(Comparator.comparing(item -> MathService.getDistanceBetween(bot.getPosition(), item.getPosition())));
+            nearestTeleport.ifPresent(gameObject -> this.firedTeleport = gameObject);
+        }
+        bot.setFiredTeleport(this.firedTeleport);
         MainProcessor mainProcessor = new MainProcessor(bot, gameState);
         mainProcessor.process();
         playerAction.action = mainProcessor.getBestAction();

@@ -19,6 +19,16 @@ public class GameObject {
     public Integer teleporterCount;
     public Integer shieldCount;
 
+    public GameObject getFiredTeleport() {
+        return firedTeleport;
+    }
+
+    public void setFiredTeleport(GameObject firedTeleport) {
+        this.firedTeleport = firedTeleport;
+    }
+
+    public GameObject firedTeleport = null;
+
     public GameObject(UUID id, Integer size, Integer speed, Integer currentHeading, Position position, ObjectTypes gameObjectType, PlayerEffects effects, Integer torpedoSalvoCount, Integer supernovaAvailable, Integer teleporterCount, Integer shieldCount) {
         this.id = id;
         this.size = size;

@@ -39,9 +39,13 @@ public class FoodProcessor extends Processor {
         var array = new ArrayList<ActionWeight>(1);
         this.data.put(PlayerActions.Forward, array);
         var heading = MathService.getHeadingBetween(botPos, nearest.getPosition());
+
+        if (MathService.getDegreeDifference(heading, bot.currentHeading) > 120) {
+            System.out.println("\n\n\n\nJANGAN MUTER ANJINGHGGGGGAOISJFAIPOJSDP\n\n\n");
+            heading = bot.currentHeading;
+        }
         // TODO: cek di currentHeading ada food atau ngga, kasih treshold misal 30 derajat
-        var actionWeight = new ActionWeight(
-                MathService.getDegreeDifference(heading, bot.currentHeading) > 150 ? bot.currentHeading : heading, VALUE);
+        var actionWeight = new ActionWeight(heading, VALUE);
         array.add(actionWeight);
     }
 

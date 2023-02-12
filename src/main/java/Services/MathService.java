@@ -63,8 +63,9 @@ public final class MathService {
                 .filter(obj -> obj.getGameObjectType() == ObjectTypes.FOOD ||
                         obj.getGameObjectType() == ObjectTypes.GAS_CLOUD ||
                         obj.getGameObjectType() == ObjectTypes.ASTEROID_FIELD ||
+                        obj.getGameObjectType() == ObjectTypes.WORMHOLE||
                         obj.getGameObjectType() == ObjectTypes.SUPER_FOOD)
-                .filter(obj -> new Vector(pos1, obj.getPosition()).isCloseToVector(refVector, threshold))
+                .filter(obj -> obj.isObjectCloseToVector(pos1, pos2, 2))
                 .mapToInt(GameObject::getSize).sum();
 
     }

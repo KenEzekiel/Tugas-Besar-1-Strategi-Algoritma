@@ -1,5 +1,6 @@
 package Models;
 
+import Models.GameObject;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -56,7 +57,7 @@ public class Vector {
         double result = dot(u, v) / dot(v, v);
         return scalar(v, result);
     }
-    public boolean isBetween(Vector testVector, Vector reference) {
+    public static boolean isBetween(Vector testVector, Vector reference) {
         boolean betweenX = ( min(0, reference.getX()) <= testVector.getX() ) && (testVector.getX() <= max(0, reference.getX()));
         boolean betweenY = ( min(0, reference.getY()) <= testVector.getY() ) && (testVector.getY() <= max(0, reference.getY()));
         return betweenX && betweenY;

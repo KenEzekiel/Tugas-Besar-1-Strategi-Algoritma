@@ -43,10 +43,13 @@ public class TorpedoProcessorPlayer extends Processor {
             for (GameObject obj : playerList) {
                 var objPos = obj.getProjectedPosition();
                 double distance = MathService.getDistanceBetween(botPos, objPos) - bot.getSize() - obj.getSize();
-                double obstacleValue = MathService.calcObjectValueBetweenObjects(gameState.getGameObjects(), bot.getPosition(), obj.getPosition(), 3);
+                double obstacleValue = MathService.calcObjectValueBetweenObjects(gameState.getGameObjects(), bot.getPosition(), obj.getPosition(), 2);
+                System.out.printf("\n\nBanyak Obs %f\n\n", obstacleValue);
                 boolean guarantee = MathService.guaranteeHitTorpedo(bot.getPosition(), obj);
-                double hitRate = guarantee ? 1 : 0.5;
-                double sizeValue = obj.getSize() < avgSize ? 0.75 : 1;
+                double hitRate = guarantee ? 1 : 0;
+//                double hitRate = guarantee ? 1 : 0.5;
+                double sizeValue = 1;
+//                double sizeValue = obj.getSize() < avgSize ? 0.75 : 1;
                 // Can be changed, need a function design
                 double weight = (VALUE - obstacleValue - 5) * hitRate * sizeValue;
                 int heading = MathService.getHeadingBetween(botPos, objPos);

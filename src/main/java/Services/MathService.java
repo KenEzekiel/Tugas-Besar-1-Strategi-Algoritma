@@ -7,6 +7,7 @@ import Models.Position;
 import Models.Vector;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public final class MathService {
@@ -56,9 +57,9 @@ public final class MathService {
         return res;
     }
 
-    public static int calcObjectValueBetweenObjects(GameState state, Position pos1, Position pos2, int threshold) {
+    public static int calcObjectValueBetweenObjects(List<GameObject> objects, Position pos1, Position pos2, int threshold) {
         Vector refVector = new Vector(pos1, pos2);
-        return state.getGameObjects().stream()
+        return objects.stream()
                 .filter(obj -> obj.getGameObjectType() == ObjectTypes.FOOD ||
                         obj.getGameObjectType() == ObjectTypes.GAS_CLOUD ||
                         obj.getGameObjectType() == ObjectTypes.ASTEROID_FIELD ||

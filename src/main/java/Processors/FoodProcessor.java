@@ -23,14 +23,14 @@ public class FoodProcessor extends Processor {
 
     @Override
     public void process() {
-        var botPos = bot.getPosition();
+        var botPos = bot.getProjectedPosition(1);
         var obstacle = gameState.getGameObjects().stream().filter(item -> item.getGameObjectType() == ObjectTypes.GAS_CLOUD).collect(Collectors.toList());
         var filtered = gameState.getGameObjects()
                 .stream()
                 .filter(item -> filterFood(item, obstacle, botPos))
                 .collect(Collectors.toList());
         var _nearest = filtered.stream()
-                .min(Comparator.comparing(item -> MathService.getDistanceBetween(bot, item)));
+                .min(Comparator.comparing(item -> MathService.getDistanceBetween(botPos, item.getPosition()) - bot.getSize() - item.getSize()));
         if (_nearest.isEmpty()) {
             return;
         }
@@ -40,7 +40,7 @@ public class FoodProcessor extends Processor {
         this.data.put(PlayerActions.Forward, array);
         var heading = MathService.getHeadingBetween(botPos, nearest.getPosition());
 
-        if (MathService.getDegreeDifference(heading, bot.currentHeading) > 120) {
+        if (MathService.getDegreeDifference(heading, bot.currentHeading) > 150) {
             heading = bot.currentHeading;
         }
         // TODO: cek di currentHeading ada food atau ngga, kasih treshold misal 30 derajat
@@ -52,8 +52,10 @@ public class FoodProcessor extends Processor {
     boolean filterFood(GameObject item, List<GameObject> obstacles, Position botPos) {
         if (item.getGameObjectType() != ObjectTypes.FOOD && item.getGameObjectType() != ObjectTypes.SUPER_FOOD)
             return false;
+        var worldCenterDis = MathService.getDistanceBetween(item.getPosition(), gameState.world.centerPoint);
         // Jangan mengambil food yang di luar map
-        if (MathService.getDistanceBetween(item.getPosition(), gameState.world.centerPoint) + bot.getSize() >= gameState.world.radius)
+        if (worldCenterDis + bot.getSize() >= gameState.world.radius ||
+                (gameState.world.currentTick <= 100 && worldCenterDis <= gameState.world.radius / 2.0))
             return false;
         for (var obs : obstacles) {
             if (MathService.isCollide(item, obs)) return false;

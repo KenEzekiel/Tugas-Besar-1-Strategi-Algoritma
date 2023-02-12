@@ -8,7 +8,6 @@ import Models.GameState;
 import Services.MathService;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.stream.Collectors;
 
 public class TeleportProcessor extends Processor {
@@ -28,9 +27,9 @@ public class TeleportProcessor extends Processor {
 
         // Fire teleport
 
-        if (bot.teleporterCount > 0 && tlp == null && bot.getSize() > 15 + 20) {
+        if (!bot.hasJustFireTeleport && bot.teleporterCount > 0 && tlp == null && bot.getSize() > 15 + 20) {
             for (GameObject ply : playerList) {
-                if (ply.getSize() <= bot.getSize() * 0.7) {
+                if (ply.getSize() > 30 && ply.getSize() <= (bot.getSize() - 20) * 0.8) {
                     int heading = MathService.getHeadingBetween(bot, ply);
                     // weighting
                     boolean guarantee = MathService.guaranteeHitTorpedo(bot.getPosition(), ply);
@@ -40,17 +39,17 @@ public class TeleportProcessor extends Processor {
                     ActionHeadingList.add(actionWeight);
                 }
             }
-            this.data.put(PlayerActions.FireTeleporter, ActionHeadingList);
+            this.data.put(PlayerActions.FireTeleport, ActionHeadingList);
         }
         if (tlp == null) return;
-        var playerInRadius = MathService.getObjectsInArea(gameState, tlp.getPosition(), bot.size / 2)
-                .stream().filter(item -> item.object.getGameObjectType() == ObjectTypes.PLAYER)
-                .sorted(Comparator.comparing(item -> item.distance))
+        var playerInRadius = MathService.getObjectsInArea(gameState, tlp.getPosition(), bot.getSize())
+                .stream().filter(item ->
+                        item.object.getGameObjectType() == ObjectTypes.PLAYER && item.object.getSize() < bot.getSize())
                 .collect(Collectors.toList());
         if (!playerInRadius.isEmpty()) {
             var numOfPlayer = playerInRadius.size();
             int heading = 0;
-            double weight = 20;
+            double weight = 5000;
             var actionWeight = new ActionWeight(heading, weight);
             ActionHeadingList.add(actionWeight);
         }

@@ -53,27 +53,37 @@ public class BotService {
     public void computeNextPlayerAction(PlayerAction playerAction) {
         var teleports = gameState.getGameObjects()
                 .stream().filter(item -> item.getGameObjectType() == ObjectTypes.TELEPORTER).collect(Collectors.toList());
-        if (teleports.stream().noneMatch(item -> item.getId().equals(this.firedTeleport.getId()))) {
-            this.firedTeleport = null;
+        if (this.firedTeleport != null) {
+            var teleport = teleports.stream().filter(item -> item.getId().equals(this.firedTeleport.getId())).collect(Collectors.toList());
+            if (teleport.size() > 0) {
+                bot.setFiredTeleport(teleport.get(0));
+            } else {
+                this.firedTeleport = null;
+            }
         }
         if (this.hasJustFiredTeleport) {
+            bot.hasJustFireTeleport = true;
             var nearestTeleport = teleports.stream()
                     .min(Comparator.comparing(item -> MathService.getDistanceBetween(bot.getPosition(), item.getPosition())));
-            nearestTeleport.ifPresent(gameObject -> this.firedTeleport = gameObject);
+            nearestTeleport.ifPresent(gameObject -> {
+                this.hasJustFiredTeleport = false;
+                this.firedTeleport = gameObject;
+            });
+        } else {
+            bot.hasJustFireTeleport = false;
         }
-        bot.setFiredTeleport(this.firedTeleport);
         MainProcessor mainProcessor = new MainProcessor(bot, gameState);
         mainProcessor.process();
         playerAction.action = mainProcessor.getBestAction();
         playerAction.heading = mainProcessor.getMaxWeight().getHeading();
 
         this.playerAction = playerAction;
-        if (playerAction.action == PlayerActions.FireTeleporter) {
+        if (playerAction.action == PlayerActions.FireTeleport) {
             this.hasJustFiredTeleport = true;
             this.teleportHeading = playerAction.heading;
-        } else {
+        } else if (playerAction.action == PlayerActions.Teleport) {
+            this.firedTeleport = null;
             this.hasJustFiredTeleport = false;
-            this.teleportHeading = 0;
         }
     }
 

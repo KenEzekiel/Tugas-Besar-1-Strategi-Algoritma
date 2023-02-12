@@ -8,7 +8,7 @@ public enum PlayerActions {
     FireTorpedoes(5),
     FireSupernova(6),
     DetonateSupernova(7),
-    FireTeleporter(8),
+    FireTeleport(8),
     Teleport(9),
     ActivateShield(10);
 

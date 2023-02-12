@@ -6,10 +6,7 @@ import Enums.PlayerEffects;
 import java.util.List;
 import java.util.UUID;
 
-import static Models.Vector.projection;
-import static Models.Vector.length;
-import static Models.Vector.minus;
-import static Models.Vector.isBetween;
+import static Models.Vector.*;
 
 public class GameObject {
     public UUID id;
@@ -23,6 +20,7 @@ public class GameObject {
     public Integer supernovaAvailable;
     public Integer teleporterCount;
     public Integer shieldCount;
+    public boolean hasJustFireTeleport = false;
 
     public GameObject getFiredTeleport() {
         return firedTeleport;
@@ -107,23 +105,23 @@ public class GameObject {
         return getProjectedPosition(1);
     }
 
-    public Position getProjectedPosition(int tickCount) {
+    public Position getProjectedPosition(double tickCount) {
         var headingRad = Math.toRadians(this.currentHeading);
         var startPosition = this.position;
         int x = 0, y = 0;
         if (this.currentHeading <= 90) {
-            x = startPosition.x + (int) Math.round(speed * Math.cos(headingRad)) * tickCount;
-            y = startPosition.y + (int) Math.round(speed * Math.sin(headingRad)) * tickCount;
+            x = startPosition.x + (int) Math.round(Math.round(speed * Math.cos(headingRad)) * tickCount);
+            y = startPosition.y + (int) Math.round(Math.round(speed * Math.sin(headingRad)) * tickCount);
         } else if (this.currentHeading <= 180) {
-            x = startPosition.x - (int) Math.round(speed * Math.cos(Math.PI - headingRad)) * tickCount;
-            y = startPosition.y + (int) Math.round(speed * Math.sin(Math.PI - headingRad)) * tickCount;
+            x = startPosition.x - (int) Math.round(Math.round(speed * Math.cos(Math.PI - headingRad)) * tickCount);
+            y = startPosition.y + (int) Math.round(Math.round(speed * Math.sin(Math.PI - headingRad)) * tickCount);
         } else if (this.currentHeading <= 270) {
-            x = startPosition.x - (int) Math.round(speed * Math.cos(headingRad - Math.PI)) * tickCount;
-            y = startPosition.y - (int) Math.round(speed * Math.sin(headingRad - Math.PI)) * tickCount;
+            x = startPosition.x - (int) Math.round(Math.round(speed * Math.cos(headingRad - Math.PI)) * tickCount);
+            y = startPosition.y - (int) Math.round(Math.round(speed * Math.sin(headingRad - Math.PI)) * tickCount);
 
         } else if (this.currentHeading <= 360) {
-            x = startPosition.x + (int) Math.round(speed * Math.cos(2 * Math.PI - headingRad)) * tickCount;
-            y = startPosition.y - (int) Math.round(speed * Math.sin(2 * Math.PI - headingRad)) * tickCount;
+            x = startPosition.x + (int) Math.round(Math.round(speed * Math.cos(2 * Math.PI - headingRad)) * tickCount);
+            y = startPosition.y - (int) Math.round(Math.round(speed * Math.sin(2 * Math.PI - headingRad)) * tickCount);
         }
 
         return new Position(x, y);
@@ -137,6 +135,7 @@ public class GameObject {
         return new GameObject(id, stateList.get(0), stateList.get(1), stateList.get(2), position, ObjectTypes.valueOf(stateList.get(3)),
                 new PlayerEffects(stateList.get(6)), stateList.get(7), stateList.get(8), stateList.get(9), stateList.get(10));
     }
+
     public boolean isObjectCloseToVector(Position startPos, Position endPos, int threshold) {
         Vector refVector = new Vector(startPos, endPos);
         Vector objVector = new Vector(startPos, this.getPosition());

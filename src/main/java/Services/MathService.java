@@ -92,7 +92,7 @@ public final class MathService {
     }
 
     public static boolean isInTorpedoPath(GameObject bot, GameObject torpedo) {
-        int sensitivity = 0;
+        int sensitivity = 5;
         Vector botPosVector = new Vector(bot.getPosition());
         Vector relativeBotPosVector = Vector.minus(botPosVector, new Vector(torpedo.getPosition()));
         Vector torpedoVector = new Vector(torpedo.getCurrentHeading());

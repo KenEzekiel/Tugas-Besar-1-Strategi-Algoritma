@@ -22,10 +22,10 @@ public class MainProcessor extends Processor {
 
         ObstacleProcessor obstacleProcessor = new ObstacleProcessor(bot, gameState);
         processOneProcessor(obstacleProcessor);
-//
+
         EdgeProcessor edgeProcessor = new EdgeProcessor(bot, gameState);
         processOneProcessor(edgeProcessor);
-//
+
         TorpedoProcessorPlayer torpedoProcessorPlayer = new TorpedoProcessorPlayer(bot, gameState);
         processOneProcessor(torpedoProcessorPlayer);
 //
@@ -33,6 +33,9 @@ public class MainProcessor extends Processor {
 //
         TeleportProcessor teleportProcessor = new TeleportProcessor(bot, gameState);
         processOneProcessor(teleportProcessor);
+
+        ShieldProcessor shieldProcessor = new ShieldProcessor(bot, gameState);
+        processOneProcessor(shieldProcessor);
     }
 
     private void processOneProcessor(Processor p) {

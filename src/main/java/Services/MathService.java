@@ -90,5 +90,18 @@ public final class MathService {
         }
         return 360 - dif;
     }
+
+    public static boolean isInTorpedoPath(GameObject bot, GameObject torpedo) {
+        int sensitivity = 0;
+        Vector botPosVector = new Vector(bot.getPosition());
+        Vector relativeBotPosVector = Vector.minus(botPosVector, new Vector(torpedo.getPosition()));
+        Vector torpedoVector = new Vector(torpedo.getCurrentHeading());
+        if (Models.Vector.isInFrontOf(relativeBotPosVector, torpedoVector)) {
+            return relativeBotPosVector
+                    .isCloseToVector2(torpedoVector, bot.getSize() + torpedo.getSize() + sensitivity);
+        } else {
+            return false;
+        }
+    }
 }
 

@@ -21,6 +21,12 @@ public class Vector {
         this.x = x;
         this.y = y;
     }
+
+    public Vector(int heading) {
+        var headingRad = Math.toRadians(heading);
+        this.x = Math.cos(headingRad) * 10;
+        this.y = Math.sin(headingRad) * 10;
+    }
     public Vector(Position end) {
         this.x = end.getX();
         this.y = end.getY();
@@ -62,6 +68,9 @@ public class Vector {
         boolean betweenY = ( min(0, reference.getY()) <= testVector.getY() ) && (testVector.getY() <= max(0, reference.getY()));
         return betweenX && betweenY;
     }
+    public static boolean isInFrontOf(Vector testVector, Vector refVector) {
+        return dot(testVector, refVector) >= 0;
+    }
     public static double distanceToVector(Position p, Vector refVector) {
         Vector testVector = new Vector(p);
         Vector projVector = projection(testVector, refVector);
@@ -71,6 +80,11 @@ public class Vector {
         Vector projVector = projection(this, refVector);
         double distance = length(minus(this, projVector));
         return (distance <= threshold) && (isBetween(projVector, refVector));
+    }
+    public boolean isCloseToVector2(Vector refVector, int threshold) {
+        Vector projVector = projection(this, refVector);
+        double distance = length(minus(this, projVector));
+        return (distance <= threshold);
     }
     public static Vector degreeToUnit(int degree) {
         double radian = Math.toRadians(degree);

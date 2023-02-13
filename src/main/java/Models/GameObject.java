@@ -84,6 +84,12 @@ public class GameObject {
     public void setSpeed(int speed) {
         this.speed = speed;
     }
+    public int getCurrentHeading() {
+        return currentHeading;
+    }
+    public void setCurrentHeading(int currentHeading) {
+        this.currentHeading = currentHeading;
+    }
 
     public Position getPosition() {
         return position;

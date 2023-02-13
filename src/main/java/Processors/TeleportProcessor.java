@@ -42,9 +42,10 @@ public class TeleportProcessor extends Processor {
             this.data.put(PlayerActions.FireTeleport, ActionHeadingList);
         }
         if (tlp == null) return;
+        int buffer = 5;
         var playerInRadius = MathService.getObjectsInArea(gameState, tlp.getPosition(), bot.getSize())
                 .stream().filter(item ->
-                        item.object.getGameObjectType() == ObjectTypes.PLAYER && item.object.getSize() < bot.getSize())
+                        item.object.getGameObjectType() == ObjectTypes.PLAYER && item.object.getSize() + buffer < bot.getSize())
                 .collect(Collectors.toList());
         if (!playerInRadius.isEmpty()) {
             var numOfPlayer = playerInRadius.size();

@@ -54,9 +54,14 @@ public class FoodProcessor extends Processor {
             return false;
         var worldCenterDis = MathService.getDistanceBetween(item.getPosition(), gameState.world.centerPoint);
         var curWorldCenterDis = MathService.getDistanceBetween(botPos, gameState.world.centerPoint);
+        
         // Jangan mengambil food yang di luar map
-        if (worldCenterDis + bot.getSize() >= gameState.world.radius ||
-                (gameState.world.currentTick <= 75 && worldCenterDis <= Math.min(gameState.world.radius / 2.5, curWorldCenterDis))) {
+        int threshold = bot.getSpeed() > 1 ? 5 : 20;
+        if (gameState.getWorld().getRadius() - worldCenterDis - bot.getSize() - item.getSize() < threshold)
+            return false;
+
+        // strategi awal tick ke pinggir map
+        if (gameState.world.currentTick <= 75 && worldCenterDis <= Math.min(gameState.world.radius / 2.5, curWorldCenterDis)) {
             return false;
         }
         for (var obs : obstacles) {

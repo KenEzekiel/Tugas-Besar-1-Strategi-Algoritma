@@ -5,7 +5,9 @@ import Models.ActionWeight;
 import Models.GameObject;
 import Models.GameState;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 public class MainProcessor extends Processor {
 
@@ -18,28 +20,45 @@ public class MainProcessor extends Processor {
 
     public void process() {
         FoodProcessor foodProcessor = new FoodProcessor(bot, gameState);
-        processOneProcessor(foodProcessor);
-
         ObstacleProcessor obstacleProcessor = new ObstacleProcessor(bot, gameState);
-        processOneProcessor(obstacleProcessor);
-
         EdgeProcessor edgeProcessor = new EdgeProcessor(bot, gameState);
-        processOneProcessor(edgeProcessor);
-
         TorpedoProcessorPlayer torpedoProcessorPlayer = new TorpedoProcessorPlayer(bot, gameState);
-        processOneProcessor(torpedoProcessorPlayer);
-//
-//        TorpedoProcessorObstacle torpedoProcessorObstacle = new TorpedoProcessorObstacle(bot, gameState);
-//
         TeleportProcessor teleportProcessor = new TeleportProcessor(bot, gameState);
-        processOneProcessor(teleportProcessor);
-
         ShieldProcessor shieldProcessor = new ShieldProcessor(bot, gameState);
-        processOneProcessor(shieldProcessor);
+
+        ArrayList<Processor> processors = new ArrayList<>(List.of(new Processor[]{
+                foodProcessor,
+                obstacleProcessor,
+                edgeProcessor,
+                torpedoProcessorPlayer,
+                teleportProcessor,
+                shieldProcessor
+        }));
+
+
+//        threading
+        for (Processor p : processors) {
+            p.start();
+        }
+
+        boolean allProcessed = false;
+        while (!allProcessed) {
+            allProcessed = true;
+            for (Processor p : processors) {
+                if (!p.processed) {
+                    if (p.isAlive()) allProcessed = false;
+                    else {
+                        processOneProcessor(p);
+                        p.processed = true;
+                    }
+                }
+            }
+        }
+
+
     }
 
     private void processOneProcessor(Processor p) {
-        p.process();
         for (var key : p.data.keySet()) {
             var value = p.data.get(key);
             var res = value.stream().max(Comparator.comparing(ActionWeight::getWeight));

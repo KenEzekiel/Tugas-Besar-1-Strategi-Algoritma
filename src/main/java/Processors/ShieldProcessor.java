@@ -18,6 +18,8 @@ public class ShieldProcessor extends Processor {
 
     @Override
     public void process() {
+        if (bot.effects.getState(PlayerEffects.SHIELD)) return;
+        
         int sizeMinBot = 50;
         int distanceTorpedosFromPlayer = 180;
         int criticalDistance = 35;

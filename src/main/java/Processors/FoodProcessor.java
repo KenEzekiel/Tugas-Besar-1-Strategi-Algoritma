@@ -50,11 +50,11 @@ public class FoodProcessor extends Processor {
 
 
     boolean filterFood(GameObject item, List<GameObject> obstacles, Position botPos) {
-        if (item.getGameObjectType() != ObjectTypes.FOOD && item.getGameObjectType() != ObjectTypes.SUPER_FOOD)
+        if (item.getGameObjectType() != ObjectTypes.FOOD && item.getGameObjectType() != ObjectTypes.SUPER_FOOD && item.getGameObjectType() != ObjectTypes.SUPERNOVA_PICKUP)
             return false;
         var worldCenterDis = MathService.getDistanceBetween(item.getPosition(), gameState.world.centerPoint);
         var curWorldCenterDis = MathService.getDistanceBetween(botPos, gameState.world.centerPoint);
-        
+
         // Jangan mengambil food yang di luar map
         int threshold = bot.getSpeed() > 1 ? 5 : 20;
         if (gameState.getWorld().getRadius() - worldCenterDis - bot.getSize() - item.getSize() < threshold)

@@ -8,9 +8,10 @@ import Models.GameState;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public abstract class Processor {
+public abstract class Processor extends Thread {
     protected final GameObject bot;
     protected final GameState gameState;
+    protected boolean processed = false;
     protected HashMap<PlayerActions, ArrayList<ActionWeight>> data;
 
 
@@ -20,11 +21,9 @@ public abstract class Processor {
         this.data = new HashMap<>();
     }
 
-    public ArrayList<ActionWeight> initializeWeight(PlayerActions action) {
-        var arr = new ArrayList<ActionWeight>();
-        this.data.put(action, arr);
-        return arr;
-    }
-
     public abstract void process();
+
+    public void run() {
+        this.process();
+    }
 }

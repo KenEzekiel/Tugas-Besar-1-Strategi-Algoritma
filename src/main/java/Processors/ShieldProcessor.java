@@ -2,6 +2,7 @@ package Processors;
 
 import Enums.ObjectTypes;
 import Enums.PlayerActions;
+import Enums.PlayerEffects;
 import Models.ActionWeight;
 import Models.GameObject;
 import Models.GameState;
@@ -17,16 +18,28 @@ public class ShieldProcessor extends Processor {
 
     @Override
     public void process() {
-        int distanceTorpedosFromPlayer = 50;
-        int minNumOfTorpedos = 3;
+        int sizeMinBot = 50;
+        int distanceTorpedosFromPlayer = 180;
+        int criticalDistance = 35;
+        int minNumOfTorpedos = 2;
+        boolean existCriticalTorpedos = false;
         var nearbyHeadingTorpedos = gameState.getGameObjects().stream()
-                .filter(item -> item.getGameObjectType() == ObjectTypes.TORPEDO_SALVO && MathService.getDistanceBetween(bot, item) < distanceTorpedosFromPlayer && MathService.isInTorpedoPath(bot, item))
+                .filter(item -> item.getGameObjectType() == ObjectTypes.TORPEDO_SALVO
+                        && MathService.getDistanceBetween(bot, item) <= distanceTorpedosFromPlayer
+                        && MathService.isInTorpedoPath(bot, item))
                 .collect(Collectors.toList());
         var ActionHeadingList = new ArrayList<ActionWeight>();
 
-        if (nearbyHeadingTorpedos.size() >= minNumOfTorpedos && bot.getSize() > 26) {
+        for (GameObject torpedo : nearbyHeadingTorpedos) {
+            if (MathService.getDistanceBetween(bot, torpedo) <= criticalDistance) {
+                existCriticalTorpedos = true;
+                break;
+            }
+        }
+
+        if (existCriticalTorpedos && nearbyHeadingTorpedos.size() >= minNumOfTorpedos && bot.getSize() > sizeMinBot) {
             int heading = 0;
-            int weight = nearbyHeadingTorpedos.size() * 10;
+            int weight = 400000;
             var actionWeight = new ActionWeight(heading, weight);
             ActionHeadingList.add(actionWeight);
             this.data.put(PlayerActions.ActivateShield, ActionHeadingList);

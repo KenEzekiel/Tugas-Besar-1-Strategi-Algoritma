@@ -23,31 +23,47 @@ public class FoodProcessor extends Processor {
 
     @Override
     public void process() {
-        var botPos = bot.getProjectedPosition(1);
         var obstacle = gameState.getGameObjects().stream().filter(item -> item.getGameObjectType() == ObjectTypes.GAS_CLOUD).collect(Collectors.toList());
         var filtered = gameState.getGameObjects()
                 .stream()
-                .filter(item -> filterFood(item, obstacle, botPos))
+                .filter(item -> filterFood(item, obstacle, bot.getPosition()))
                 .collect(Collectors.toList());
         var _nearest = filtered.stream()
-                .min(Comparator.comparing(item -> MathService.getDistanceBetween(botPos, item.getPosition()) - bot.getSize() - item.getSize()));
+                .min(Comparator.comparing(item -> MathService.getDistanceBetween(bot, item)));
         if (_nearest.isEmpty()) {
             return;
         }
+
         var nearest = _nearest.get();
+        var nearestDistance = MathService.getDistanceBetween(bot, nearest);
+        var closeToNearest = filtered.stream()
+                .filter(item -> !item.getId().equals(nearest.getId()) && Math.abs(MathService.getDistanceBetween(bot, item) - nearestDistance) <= 4).collect(Collectors.toList());
+
 
         var array = new ArrayList<ActionWeight>(1);
         this.data.put(PlayerActions.Forward, array);
-        var heading = MathService.getHeadingBetween(botPos, nearest.getPosition());
+        var heading = MathService.getHeadingBetween(bot.getPosition(), nearest.getPosition());
 
-        if (MathService.getDegreeDifference(heading, bot.currentHeading) > 150) {
-            heading = bot.currentHeading;
+        if (closeToNearest.size() > 0) {
+            var close = closeToNearest.get(0);
+            var heading2 = MathService.getHeadingBetween(bot.getPosition(), close.getPosition());
+            var dif = Math.abs(heading - heading2);
+            if (dif <= 180) {
+                heading += heading < heading2 ? -15 : 15;
+            } else {
+                dif = 360 - dif;
+                heading += heading < heading2 ? 15 : -15;
+            }
+            heading = (heading + 360) % 360;
+            if (dif > 150) {
+                var used = close.getId().toString().compareTo(nearest.getId().toString()) > 0 ? close : nearest;
+                heading = MathService.getHeadingBetween(bot.getPosition(), used.getPosition());
+            }
         }
-        // TODO: cek di currentHeading ada food atau ngga, kasih treshold misal 30 derajat
+
         var actionWeight = new ActionWeight(heading, VALUE);
         array.add(actionWeight);
     }
-
 
     boolean filterFood(GameObject item, List<GameObject> obstacles, Position botPos) {
         if (item.getGameObjectType() != ObjectTypes.FOOD && item.getGameObjectType() != ObjectTypes.SUPER_FOOD && item.getGameObjectType() != ObjectTypes.SUPERNOVA_PICKUP)

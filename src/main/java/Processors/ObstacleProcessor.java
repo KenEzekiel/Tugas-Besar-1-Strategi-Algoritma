@@ -32,13 +32,15 @@ public class ObstacleProcessor extends Processor {
                 int heading;
                 var distance = MathService.getDistanceBetween(botPos, obj.getPosition()) - bot.getSize() - obj.getSize();
                 if (distance <= 6) {
+                    double weight = 500;
                     if (distance < 3) {
+                        weight = 600;
                         heading = MathService.reverseHeading(MathService.getHeadingBetween(botPos, obj.getPosition()));
                     } else {
                         heading = (MathService.getHeadingBetween(botPos, obj.getPosition()) + 90) % 360;
                     }
                     // weight akan berpengaruh pada prioritas algoritma untuk mengambil action ini
-                    double weight = 500;
+
                     var actionWeight = new ActionWeight(heading, weight);
                     ActionHeadingList.add(actionWeight);
                 }

@@ -72,7 +72,7 @@ public class Main {
 
         Thread.sleep(1000);
         System.out.println("Registering with the runner...");
-        hubConnection.send("Register", token, "AFK Bot1");
+        hubConnection.send("Register", token, "AFK Bot");
 
         //This is a blocking call
         hubConnection.start().subscribe(() -> {

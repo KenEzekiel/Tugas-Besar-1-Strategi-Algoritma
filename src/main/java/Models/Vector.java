@@ -92,6 +92,10 @@ public class Vector {
         double y = Math.sin(radian);
         return new Vector(x, y);
     }
+    public int toHeading() {
+        // NOTE : atan2 syntax is (y, x) not otherwise
+        return (int) Math.atan2(this.y, this.x);
+    }
 }
 
 

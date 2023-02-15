@@ -92,7 +92,7 @@ public final class MathService {
     }
 
     public static boolean isInTorpedoPath(GameObject bot, GameObject torpedo) {
-        int sensitivity = 5;
+        int sensitivity = 2;
         Vector botPosVector = new Vector(bot.getPosition());
         Vector relativeBotPosVector = Vector.minus(botPosVector, new Vector(torpedo.getPosition()));
         Vector torpedoVector = new Vector(torpedo.getCurrentHeading());
@@ -102,6 +102,23 @@ public final class MathService {
         } else {
             return false;
         }
+    }
+
+    public static int torpedoEscapeHeading(GameObject bot, GameObject torpedo) {
+        Vector botPosVector = new Vector(bot.getPosition());
+        Vector relativeBotPosVector = Vector.minus(botPosVector, new Vector(torpedo.getPosition()));
+        Vector torpedoHeadingVector = new Vector(torpedo.getCurrentHeading());
+        Vector projection = Vector.projection(relativeBotPosVector, torpedoHeadingVector);
+        Vector escapeHeading = Vector.minus(relativeBotPosVector, projection);
+        return escapeHeading.toHeading();
+    }
+    public static double distanceToTorpedoPath(GameObject bot, GameObject torpedo) {
+        Vector botPosVector = new Vector(bot.getPosition());
+        Vector relativeBotPosVector = Vector.minus(botPosVector, new Vector(torpedo.getPosition()));
+        Vector torpedoVector = new Vector(torpedo.getCurrentHeading());
+        Vector torpedoHeadingVector = new Vector(torpedo.getCurrentHeading());
+        Vector projection = Vector.projection(relativeBotPosVector, torpedoHeadingVector);
+        return Vector.length(projection);
     }
 }
 

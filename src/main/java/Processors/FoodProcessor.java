@@ -37,7 +37,10 @@ public class FoodProcessor extends Processor {
         var nearest = _nearest.get();
         var nearestDistance = MathService.getDistanceBetween(bot, nearest);
         var closeToNearest = filtered.stream()
-                .filter(item -> !item.getId().equals(nearest.getId()) && Math.abs(MathService.getDistanceBetween(bot, item) - nearestDistance) <= 4).collect(Collectors.toList());
+                .filter(item -> !item.getId().equals(nearest.getId()) &&
+                        Math.abs(MathService.getDistanceBetween(bot, item) / bot.speed - nearestDistance / bot.speed) <= 3)
+                .sorted(Comparator.comparing(item -> MathService.getDistanceBetween(bot, item)))
+                .collect(Collectors.toList());
 
 
         var array = new ArrayList<ActionWeight>(1);
@@ -56,6 +59,10 @@ public class FoodProcessor extends Processor {
             }
             heading = (heading + 360) % 360;
             if (dif > 150) {
+                var lowestId = closeToNearest.stream().min(Comparator.comparing(a -> a.getId().toString()));
+                if (lowestId.isPresent()) {
+                    close = lowestId.get();
+                }
                 var used = close.getId().toString().compareTo(nearest.getId().toString()) > 0 ? close : nearest;
                 heading = MathService.getHeadingBetween(bot.getPosition(), used.getPosition());
             }

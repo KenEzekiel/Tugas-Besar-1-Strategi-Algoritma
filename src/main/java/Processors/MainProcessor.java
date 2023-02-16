@@ -26,6 +26,7 @@ public class MainProcessor extends Processor {
         TeleportProcessor teleportProcessor = new TeleportProcessor(bot, gameState);
         ShieldProcessor shieldProcessor = new ShieldProcessor(bot, gameState);
         EnemyProcessor enemyProcessor = new EnemyProcessor(bot, gameState);
+        LateGameProcessor lateGameProcessor = new LateGameProcessor(bot, gameState);
 
         ArrayList<Processor> processors = new ArrayList<>(List.of(new Processor[]{
                 foodProcessor,
@@ -34,7 +35,8 @@ public class MainProcessor extends Processor {
                 torpedoProcessorPlayer,
                 teleportProcessor,
                 shieldProcessor,
-                enemyProcessor
+                enemyProcessor,
+                lateGameProcessor
         }));
 
 

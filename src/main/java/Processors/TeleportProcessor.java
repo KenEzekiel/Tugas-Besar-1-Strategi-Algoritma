@@ -29,7 +29,7 @@ public class TeleportProcessor extends Processor {
 
         if (!bot.hasJustFireTeleport && bot.teleporterCount > 0 && tlp == null && bot.getSize() > 15 + 20) {
             for (GameObject ply : playerList) {
-                if (ply.getSize() > 30 && ply.getSize() <= (bot.getSize() - 20) * 0.8) {
+                if (ply.getSize() > 30 && ply.getSize() <= (bot.getSize() - 20) - 20) {
                     int heading = MathService.getHeadingBetween(bot, ply);
                     // weighting
                     boolean guarantee = MathService.guaranteeHitTorpedo(bot.getPosition(), ply);

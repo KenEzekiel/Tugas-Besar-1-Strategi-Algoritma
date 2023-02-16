@@ -26,7 +26,7 @@ public class EnemyProcessor extends Processor{
         Position botPos = bot.getPosition();
         int botSize = bot.getSize();
         int torpedoSpeed = 20;
-        int buffer = 40;
+        int buffer = 60;
         int reactionDistance = botSize * botSize * torpedoSpeed / 200 + buffer;
         if (botSize < 50) {
             var detectedTorpedos = gameState.getGameObjects().stream()

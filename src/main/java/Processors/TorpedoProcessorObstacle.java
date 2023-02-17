@@ -42,7 +42,7 @@ public class TorpedoProcessorObstacle extends Processor {
                 // v = d/t
                 // v : bot.speed    t -> per tick -1 size -> t <= 0.5 * bot.size (keep half of the size after traversing the cloud)
                 // t = d/v <= 0.5 * bot.size
-                boolean canHead = obj.getSize() * 2 / bot.getSpeed() <= 0.5 * bot.getSize();
+                boolean canHead = obj.getSize() * 2.0 / bot.getSpeed() <= 0.5 * bot.getSize();
                 boolean canDestroy = !biggerThanHalf && obj.getSize() < 15;
 
                 var worldCenter = new Position(0, 0);

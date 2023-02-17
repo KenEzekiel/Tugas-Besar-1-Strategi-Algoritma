@@ -114,6 +114,14 @@ public final class MathService {
         return (200 * distance <= shipSize * shipSize * torpedoSpeed * modifierConstant);
     }
 
+
+    public static boolean guaranteeHitTeleport(GameObject bot, GameObject enemy) {
+        double modifierConstant = 1.5;
+        int torpedoSpeed = 20;
+        double distance = getDistanceBetween(bot, enemy);
+        return (200 * distance <= bot.getSize() * enemy.getSize() * torpedoSpeed * modifierConstant);
+    }
+
     public static boolean isCollide(GameObject obj1, GameObject obj2) {
         return getDistanceBetween(obj1, obj2) < 0;
     }

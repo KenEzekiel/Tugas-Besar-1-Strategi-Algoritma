@@ -19,7 +19,7 @@ public class ShieldProcessor extends Processor {
     @Override
     public void process() {
         if (bot.effects.getState(PlayerEffects.SHIELD)) return;
-        
+
         int sizeMinBot = 50;
         int distanceTorpedosFromPlayer = 180;
         int criticalDistance = 35;
@@ -41,7 +41,7 @@ public class ShieldProcessor extends Processor {
 
         if (existCriticalTorpedos && nearbyHeadingTorpedos.size() >= minNumOfTorpedos && bot.getSize() > sizeMinBot) {
             int heading = 0;
-            int weight = 400000;
+            int weight = 40000;
             var actionWeight = new ActionWeight(heading, weight);
             ActionHeadingList.add(actionWeight);
             this.data.put(PlayerActions.ActivateShield, ActionHeadingList);

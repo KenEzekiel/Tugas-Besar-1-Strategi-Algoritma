@@ -32,9 +32,9 @@ public class TeleportProcessor extends Processor {
                 if (ply.getSize() > 30 && ply.getSize() <= (bot.getSize() - 20) - 20) {
                     int heading = MathService.getHeadingBetween(bot, ply);
                     // weighting
-                    boolean guarantee = MathService.guaranteeHitTorpedo(bot.getPosition(), ply);
+                    boolean guarantee = MathService.guaranteeHitTeleport(bot, ply);
                     double hitRate = guarantee ? 1 : 0.2;
-                    double weight = ply.getSize() * hitRate;
+                    double weight = ply.getSize() * hitRate * 10;
                     var actionWeight = new ActionWeight(heading, weight);
                     ActionHeadingList.add(actionWeight);
                 }
@@ -50,7 +50,7 @@ public class TeleportProcessor extends Processor {
         if (!playerInRadius.isEmpty()) {
             var numOfPlayer = playerInRadius.size();
             int heading = 0;
-            double weight = 5000;
+            double weight = 500000;
             var actionWeight = new ActionWeight(heading, weight);
             ActionHeadingList.add(actionWeight);
         }

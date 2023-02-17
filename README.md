@@ -15,6 +15,7 @@
 This project is an Algorithm Strategies Project that implements a bot/Artificial Intelligence using the Greedy Algorithm as the backbone of the decision making algorithm. The basic for this project is an understanding in Object-Oriented Programming, The Greedy Algorithm, Algorithm Design and Analysis, and with a bonus of basic understanding of threading. The bot to be implemented is a bot from The Entellect 2021 Challenge game, Galaxio, where it an be classified as a battle-royale, agar.io-like game with a twist.
 
 The full game description can be read [here](github.com/EntelectChallenge/2021-Galaxio/blob/develop/game-engine/game-rules.md)
+Starter pack can be downloaded [here](https://github.com/EntelectChallenge/2021-Galaxio/releases/tag/2021.3.2)
 
 ## Algorithm Description
 

@@ -5,7 +5,9 @@ import Enums.PlayerActions;
 import Models.ActionWeight;
 import Models.GameObject;
 import Models.GameState;
+import Models.Position;
 import Services.MathService;
+import Services.ObjectDistanceDto;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -33,9 +35,55 @@ public class ObstacleProcessor extends Processor {
                 var distance = MathService.getDistanceBetween(botPos, obj.getPosition()) - bot.getSize() - obj.getSize();
                 if (distance <= 6) {
                     double weight = 500;
-                    if (distance < 3) {
+                    if (distance < 3 && distance >= 0) {
                         weight = 600;
                         heading = MathService.reverseHeading(MathService.getHeadingBetween(botPos, obj.getPosition()));
+                    } else if (distance < 0) {
+                        // determine the fastest way to get out, except to the edge position
+                        weight = 605;
+                        // default is to the center of the map
+                        heading = MathService.getHeadingBetween(bot.getPosition(), gameState.getWorld().getCenterPoint());
+                        // find a better way except to the edge
+                        int altHeading;
+                        // Check the heading perpendicular to the obstacle
+                        int altLeft = MathService.getHeadingBetween(bot, obj) + 90 % 360;
+                        int altRight = MathService.getHeadingBetween(bot, obj) - 90 % 360;
+                        // Check a radius from a distance from the bot for the value inside it
+                        int radius = 10;
+                        int pointDistance = 5 + bot.getSize();
+                        Position defPos = MathService.getPositionFromAPoint(bot.getPosition(), pointDistance, heading);
+                        int defVal = MathService.calcObjectValueInArea(gameState, defPos, radius, bot);
+                        int altVal;
+                        Position leftPos = MathService.getPositionFromAPoint(bot.getPosition(), pointDistance, altLeft);
+                        int leftVal = MathService.calcObjectValueInArea(gameState, leftPos, radius, bot);
+                        Position rightPos = MathService.getPositionFromAPoint(bot.getPosition(), pointDistance, altRight);
+                        int rightVal = MathService.calcObjectValueInArea(gameState, rightPos, radius, bot);
+
+                        // Check which val is greater, and whether it is not headed to the edge
+                        if (leftVal >= rightVal) {
+                            altHeading = altLeft;
+                            altVal = leftVal;
+                            if (altHeading == MathService.reverseHeading(MathService.getHeadingBetween(bot.getPosition(), gameState.getWorld().getCenterPoint()))) {
+                                altHeading = MathService.reverseHeading(altRight);
+                                altVal = rightVal;
+                            }
+                        } else {
+                            altHeading = altRight;
+                            altVal = rightVal;
+                            if (altHeading == MathService.reverseHeading(MathService.getHeadingBetween(bot.getPosition(), gameState.getWorld().getCenterPoint()))) {
+                                altHeading = MathService.reverseHeading(altLeft);
+                                altVal = leftVal;
+                            }
+                        }
+
+                        // Check, is it better to go left/right or still go straight to center?
+                        if (defVal >= altVal) {
+                            // Still default
+                        } else {
+                            // Switch to left/right if it is not to the edge
+                            heading = altHeading;
+                        }
+
                     } else {
                         heading = (MathService.getHeadingBetween(botPos, obj.getPosition()) + 90) % 360;
                     }

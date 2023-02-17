@@ -5,6 +5,8 @@ import Models.GameObject;
 import Models.GameState;
 import Models.Position;
 import Models.Vector;
+import javafx.geometry.Pos;
+//import javafx.geometry.Pos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +57,43 @@ public final class MathService {
         res.addAll(objects);
         res.addAll(players);
         return res;
+    }
+
+    public static int calcObjectValueInArea(GameState state, Position pos, int radius, GameObject bot) {
+        ArrayList<ObjectDistanceDto> objectDistanceDtos = getObjectsInArea(state, pos, radius);
+        int val = 0;
+        for (ObjectDistanceDto lObj : objectDistanceDtos) {
+            if (ObjectTypes.GAS_CLOUD.equals(lObj.object)) {
+                val -= lObj.object.getSize();
+            }
+            if (ObjectTypes.FOOD.equals(lObj.object)) {
+                val += 3;
+            }
+            if (ObjectTypes.PLAYER.equals(lObj.object)) {
+                if (lObj.object.getSize() > 0.9 * bot.getSize()) {
+                    val -= bot.getSize();
+                } else {
+                    val += lObj.object.getSize();
+                }
+            }
+            if (ObjectTypes.SUPER_FOOD.equals(lObj.object)) {
+                val += 5;
+            }
+            if (ObjectTypes.ASTEROID_FIELD.equals(lObj.object)) {
+                val -= 2;
+            }
+            if (ObjectTypes.SUPERNOVA_PICKUP.equals(lObj.object)) {
+                val += 4;
+            }
+        }
+        return val;
+    }
+
+    public static Position getPositionFromAPoint(Position pos1, int distance, int degree) {
+        int x = (int) Math.round(distance * Math.cos(degree) + pos1.getX());
+        int y = (int) Math.round(distance * Math.sin(degree) + pos1.getY());
+        Position ret = new Position(x, y);
+        return ret;
     }
 
     public static int calcObjectValueBetweenObjects(List<GameObject> objects, Position pos1, Position pos2, int threshold) {

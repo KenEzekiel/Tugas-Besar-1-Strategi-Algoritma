@@ -1,5 +1,7 @@
 package Models;
 
+import Enums.ObjectTypes;
+
 import java.util.*;
 
 public class GameState {
@@ -44,4 +46,12 @@ public class GameState {
         this.playerGameObjects = playerGameObjects;
     }
 
+    public double foodSpreadDensity() {
+        double radius =  this.getWorld().getRadius();
+        int foodCount = (int) this.getGameObjects().stream()
+                .filter(obj -> obj.getGameObjectType() == ObjectTypes.FOOD ||
+                                obj.getGameObjectType() == ObjectTypes.SUPER_FOOD)
+                .count();
+        return  foodCount / (radius * radius);
+    }
 }

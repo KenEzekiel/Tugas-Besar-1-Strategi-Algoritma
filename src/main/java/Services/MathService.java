@@ -5,8 +5,6 @@ import Models.GameObject;
 import Models.GameState;
 import Models.Position;
 import Models.Vector;
-import javafx.geometry.Pos;
-//import javafx.geometry.Pos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,26 +61,24 @@ public final class MathService {
         ArrayList<ObjectDistanceDto> objectDistanceDtos = getObjectsInArea(state, pos, radius);
         int val = 0;
         for (ObjectDistanceDto lObj : objectDistanceDtos) {
-            if (ObjectTypes.GAS_CLOUD.equals(lObj.object)) {
+            if (lObj.object.getGameObjectType() == ObjectTypes.GAS_CLOUD) {
                 val -= lObj.object.getSize();
-            }
-            if (ObjectTypes.FOOD.equals(lObj.object)) {
+            } else if (lObj.object.getGameObjectType() == ObjectTypes.FOOD) {
                 val += 3;
-            }
-            if (ObjectTypes.PLAYER.equals(lObj.object)) {
+            } else if (lObj.object.getGameObjectType() == ObjectTypes.PLAYER) {
                 if (lObj.object.getSize() > 0.9 * bot.getSize()) {
                     val -= bot.getSize();
                 } else {
                     val += lObj.object.getSize();
                 }
             }
-            if (ObjectTypes.SUPER_FOOD.equals(lObj.object)) {
+            if (lObj.object.getGameObjectType() == ObjectTypes.SUPER_FOOD) {
                 val += 5;
             }
-            if (ObjectTypes.ASTEROID_FIELD.equals(lObj.object)) {
+            if (lObj.object.getGameObjectType() == ObjectTypes.ASTEROID_FIELD) {
                 val -= 2;
             }
-            if (ObjectTypes.SUPERNOVA_PICKUP.equals(lObj.object)) {
+            if (lObj.object.getGameObjectType() == ObjectTypes.SUPERNOVA_PICKUP) {
                 val += 4;
             }
         }
@@ -151,6 +147,7 @@ public final class MathService {
         Vector escapeHeading = Vector.minus(relativeBotPosVector, projection);
         return escapeHeading.toHeading();
     }
+
     public static double distanceToTorpedoPath(GameObject bot, GameObject torpedo) {
         Vector botPosVector = new Vector(bot.getPosition());
         Vector relativeBotPosVector = Vector.minus(botPosVector, new Vector(torpedo.getPosition()));

@@ -26,7 +26,7 @@ public class RunFromTeleporterProcessor extends Processor{
             return;
         }
         var tlpList = gameState.getGameObjects().stream()
-                .filter(item -> item.gameObjectType == ObjectTypes.TELEPORTER && item.getCurrentHeading() == MathService.getHeadingBetween(item, bot) && MathService.guaranteeHitTorpedo(item.getPosition(), bot) && MathService.getDistanceBetween(bot, item) < 50)
+                .filter(item -> item.gameObjectType == ObjectTypes.TELEPORTER && item.getCurrentHeading() == MathService.getHeadingBetween(item, bot) && MathService.getDistanceBetween(bot, item) < 50)
                 .collect(Collectors.toList());
 
         var ActionHeadingList = new ArrayList<ActionWeight>();

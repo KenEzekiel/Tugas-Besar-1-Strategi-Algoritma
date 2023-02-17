@@ -32,7 +32,7 @@ public class RunFromTeleporterProcessor extends Processor{
         var ActionHeadingList = new ArrayList<ActionWeight>();
         var tlp = bot.firedTeleport;
 
-        int threshold = 15;
+        int threshold = 30;
         if (tlpList.size() > 0) {
             var obj = tlpList.get(0);
             // firing teleport
@@ -85,7 +85,7 @@ public class RunFromTeleporterProcessor extends Processor{
             if (tlp == null) {
                 return;
             }
-            int buffer = 5;
+            int buffer = 10;
             if (MathService.getDistanceBetween(obj, tlp) >= bot.size + buffer + biggestPlayer.get().size) {
                 int heading = 0;
                 double weight = 4999;

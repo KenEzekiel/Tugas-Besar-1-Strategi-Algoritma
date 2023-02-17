@@ -24,6 +24,8 @@ The Base Algorithm of this project is the greedy algorithm, where there can be m
 
 In short, the greedy algorithm is an algorithm that always takes the best-possible solution at that instance, or in other words, the local maximum at an instance. This way, in some cases, the greedy algorithm can approximate the global maximum with the local maximum.
 
+Our description of the algorithm is [here](https://youtu.be/S6gkOi8NH_A)
+
 ## Program Requirements
 
 * Java version 11

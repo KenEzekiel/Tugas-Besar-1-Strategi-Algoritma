@@ -35,8 +35,6 @@ public class EnemyProcessor extends Processor{
                             && MathService.isInTorpedoPath(bot, item))
                     .collect(Collectors.toList());
             var ActionHeadingList = new ArrayList<ActionWeight>();
-            //        double foodDensity = gameState.foodSpreadDensity();
-
             var _nearestTorpedos = detectedTorpedos.stream()
                     .min(Comparator.comparing(item -> MathService.getDistanceBetween(botPos, item.getPosition()) - bot.getSize() - item.getSize()));
             if (_nearestTorpedos.isEmpty()) {
@@ -45,7 +43,7 @@ public class EnemyProcessor extends Processor{
             var nearestTorpedos = _nearestTorpedos.get();
             if (MathService.distanceToTorpedoPath(bot, nearestTorpedos) < botSize + 10) {
                 int heading = MathService.torpedoEscapeHeading(bot, nearestTorpedos);
-                int weight = 400000;
+                int weight = 100;
                 var actionWeight = new ActionWeight(heading, weight);
                 ActionHeadingList.add(actionWeight);
                 this.data.put(PlayerActions.Forward, ActionHeadingList);

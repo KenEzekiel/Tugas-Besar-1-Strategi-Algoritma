@@ -43,7 +43,7 @@ public class EnemyProcessor extends Processor{
                 return;
             }
             var nearestTorpedos = _nearestTorpedos.get();
-            if (MathService.distanceToTorpedoPath(bot, nearestTorpedos) < botSize + 4) {
+            if (MathService.distanceToTorpedoPath(bot, nearestTorpedos) < botSize + 10) {
                 int heading = MathService.torpedoEscapeHeading(bot, nearestTorpedos);
                 int weight = 400000;
                 var actionWeight = new ActionWeight(heading, weight);

@@ -59,7 +59,7 @@ public class FoodProcessor extends Processor {
             }
             heading = (heading + 360) % 360;
             if (dif > 150) {
-                var lowestId = closeToNearest.stream().min(Comparator.comparing(a -> a.getId().toString()));
+                var lowestId = closeToNearest.stream().max(Comparator.comparing(a -> a.getId().toString()));
                 if (lowestId.isPresent()) {
                     close = lowestId.get();
                 }

@@ -116,7 +116,7 @@ public final class MathService {
 
 
     public static boolean guaranteeHitTeleport(GameObject bot, GameObject enemy) {
-        double modifierConstant = 1.5;
+        double modifierConstant = 2;
         int torpedoSpeed = 20;
         double distance = getDistanceBetween(bot, enemy);
         return (200 * distance <= bot.getSize() * enemy.getSize() * torpedoSpeed * modifierConstant);

@@ -26,7 +26,7 @@ public class EdgeProcessor extends Processor {
         double weight;
         int threshold = bot.getSpeed() > 1 ? 5 : 20;
         if (gameState.getWorld().getRadius() - distanceToCenter - bot.getSize() < threshold) {
-            weight = 1000;
+            weight = 800;
         } else {
             weight = 2;
         }

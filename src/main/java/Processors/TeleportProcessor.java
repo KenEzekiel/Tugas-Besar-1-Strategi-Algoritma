@@ -34,7 +34,7 @@ public class TeleportProcessor extends Processor {
                     // weighting
                     boolean guarantee = MathService.guaranteeHitTeleport(bot, ply);
                     double hitRate = guarantee ? 1 : 0.2;
-                    double weight = ply.getSize() * hitRate * 10;
+                    double weight = ply.getSize() * hitRate * 20;
                     var actionWeight = new ActionWeight(heading, weight);
                     ActionHeadingList.add(actionWeight);
                 }

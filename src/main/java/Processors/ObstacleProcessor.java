@@ -48,6 +48,12 @@ public class ObstacleProcessor extends Processor {
                         // Check the heading perpendicular to the obstacle
                         int altLeft = MathService.getHeadingBetween(bot, obj) + 90 % 360;
                         int altRight = MathService.getHeadingBetween(bot, obj) - 90 % 360;
+
+                        if (MathService.getDegreeDifference(heading, altLeft) < 30) {
+                            altLeft = heading;
+                        } else if (MathService.getDegreeDifference(heading, altRight) < 30) {
+                            altRight = heading;
+                        }
                         // Check a radius from a distance from the bot for the value inside it
                         int radius = 10;
                         int pointDistance = 5 + bot.getSize();

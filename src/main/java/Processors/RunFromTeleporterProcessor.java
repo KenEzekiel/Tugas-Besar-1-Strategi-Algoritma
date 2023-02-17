@@ -26,13 +26,13 @@ public class RunFromTeleporterProcessor extends Processor{
             return;
         }
         var tlpList = gameState.getGameObjects().stream()
-                .filter(item -> item.gameObjectType == ObjectTypes.TELEPORTER && item.getCurrentHeading() == MathService.getHeadingBetween(item, bot) && MathService.guaranteeHitTorpedo(item.getPosition(), bot))
+                .filter(item -> item.gameObjectType == ObjectTypes.TELEPORTER && item.getCurrentHeading() == MathService.getHeadingBetween(item, bot) && MathService.guaranteeHitTorpedo(item.getPosition(), bot) && MathService.getDistanceBetween(bot, item) < 50)
                 .collect(Collectors.toList());
 
         var ActionHeadingList = new ArrayList<ActionWeight>();
         var tlp = bot.firedTeleport;
 
-        int threshold = 20;
+        int threshold = 15;
         if (tlpList.size() > 0) {
             var obj = tlpList.get(0);
             // firing teleport

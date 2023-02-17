@@ -48,7 +48,7 @@ public class TorpedoProcessorObstacle extends Processor {
                 var worldCenter = new Position(0, 0);
                 double distanceToCenter = MathService.getDistanceBetween(botPos, worldCenter);
 
-                if (worldRadius - distanceToCenter > thresholdDistance && heading == MathService.getHeadingBetween(bot.getPosition(), worldCenter)) {
+                if (worldRadius - distanceToCenter + bot.getSize() > thresholdDistance && heading == MathService.getHeadingBetween(bot.getPosition(), worldCenter)) {
                     if (canHead) {
                         actionTaken = PlayerActions.Forward;
                         weight = 601;

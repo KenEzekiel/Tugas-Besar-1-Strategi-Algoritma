@@ -51,10 +51,10 @@ public class TorpedoProcessorObstacle extends Processor {
                 if (worldRadius - distanceToCenter > thresholdDistance && heading == MathService.getHeadingBetween(bot.getPosition(), worldCenter)) {
                     if (canHead) {
                         actionTaken = PlayerActions.Forward;
-                        weight = 15;
+                        weight = 601;
                         heading = MathService.getHeadingBetween(bot.getPosition(), worldCenter);
                     } else if (canDestroy) {
-                        weight = 15;
+                        weight = 601;
                     }
                 } else {
                     weight = 2;

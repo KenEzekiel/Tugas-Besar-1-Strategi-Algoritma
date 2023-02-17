@@ -18,13 +18,7 @@ public class TorpedoProcessorPlayer extends Processor {
     public TorpedoProcessorPlayer(GameObject bot, GameState gameState) {
         super(bot, gameState);
     }
-
-
-    private double calculateHitRate(double distance) {
-        var worldDiameter = gameState.getWorld().getRadius() * 2;
-        return (worldDiameter - distance) / worldDiameter;
-    }
-
+    
     @Override
     public void process() {
         var botPos = bot.getProjectedPosition();
@@ -35,22 +29,14 @@ public class TorpedoProcessorPlayer extends Processor {
         var ActionHeadingList = new ArrayList<ActionWeight>();
 
         // Only trigger if the player has more than some number MINVAL
-        // Weight will be + if player's salvo is nearing max
-        if (bot.getSize() > MINVAL && bot.torpedoSalvoCount > 0) {
-            var _avgSize = playerList.stream().mapToInt(GameObject::getSize).average();
-            var avgSize = _avgSize.isPresent() ? _avgSize.getAsDouble() : 0;
+        if (bot.getSize() > MINVAL && bot.torpedoSalvoCount > 3) {
 
             for (GameObject obj : playerList) {
                 var objPos = obj.getProjectedPosition();
-                double distance = MathService.getDistanceBetween(botPos, objPos) - bot.getSize() - obj.getSize();
                 double obstacleValue = MathService.calcObjectValueBetweenObjects(gameState.getGameObjects(), bot.getPosition(), obj.getPosition(), 2);
                 boolean guarantee = MathService.guaranteeHitTorpedo(bot.getPosition(), obj);
                 double hitRate = guarantee ? 1 : 0;
-//                double hitRate = guarantee ? 1 : 0.5;
-                double sizeValue = 1;
-//                double sizeValue = obj.getSize() < avgSize ? 0.75 : 1;
-                // Can be changed, need a function design
-                double weight = (VALUE - obstacleValue - 5) * hitRate * sizeValue;
+                double weight = (VALUE - obstacleValue - 5) * hitRate;
                 int heading = MathService.getHeadingBetween(botPos, objPos);
                 var actionWeight = new ActionWeight(heading, weight);
                 ActionHeadingList.add(actionWeight);
